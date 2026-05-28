@@ -59,7 +59,7 @@ echo [OK] go.exe found
 :: ── Build ─────────────────────────────────────────────────────────────────
 echo.
 echo [BUILD] Building torvpn.exe...
-go build -ldflags="-s -w" -o torvpn.exe ./cmd/torvpn/
+go build -ldflags="-s -w" -buildvcs=false -o torvpn.exe ./cmd/torvpn/
 if %errorLevel% neq 0 (
     echo [ERROR] Build failed. Run: go build ./cmd/torvpn/ for details.
     pause
