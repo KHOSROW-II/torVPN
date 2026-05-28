@@ -4,17 +4,17 @@
 Implemented in Go — designed for Windows first, Linux-compatible with no code changes.
 
 ```
- ┌─────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+ ┌─────────────┐     ┌──────────────┐    ┌──────────────┐     ┌──────────────┐
  │  Your app   │───▶│  TUN device  │───▶│  Tor SOCKS5  │───▶│  Tor network │
- │  (any OS)   │    │  torvpn0     │    │  127.0.0.1   │    │  → Internet  │
- └─────────────┘    └──────────────┘    │  :9050       │    └──────────────┘
-                                        └──────────────┘
+ │  (any OS)   │     │  torvpn      │    │  127.0.0.1   │     │  → Internet  │
+ └─────────────┘     └──────────────┘    │  :9050       │     └──────────────┘
+                                         └──────────────┘
                          ▲
                     ┌────┴────────┐
                     │ DoH Resolver│  ← All DNS goes here (no leaks)
-                    │ 127.0.0.1  │    then through Tor to 1.1.1.1
-                    │ :5300      │
-                    └────────────┘
+                    │ 127.0.0.1   │    then through Tor to 1.1.1.1
+                    │ :5300       │
+                    └─────────────┘
 ```
 
 ---
