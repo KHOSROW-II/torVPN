@@ -79,7 +79,7 @@ Verify: `go version`
 1. Download **Tor Expert Bundle** from https://www.torproject.org/download/tor/  
 2. Extract the ZIP.  
 3. Add the extracted folder to your system `PATH`:  
-   - Open **System Properties → Environment Variables → Path → Edit → New**  
+   - Open **Environment Variables → New**  
    - Add the full path (e.g. `C:\tor\`)  
 4. Verify: `tor.exe --version`
 
