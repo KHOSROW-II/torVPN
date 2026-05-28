@@ -152,7 +152,7 @@ Clone and build from either OS:
 
 ```bash
 # Clone
-git clone https://github.com/yourusername/torvpn.git
+https://github.com/KHOSROW-II/torVPN.git
 cd torvpn
 
 # Download Go dependencies
