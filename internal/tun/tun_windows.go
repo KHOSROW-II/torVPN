@@ -16,11 +16,11 @@ package tun
 
 import (
 	"fmt"
+	"net"
 	"os/exec"
 
 	"github.com/songgao/water"
 )
-
 // setInterfaceName is a no-op on Windows: the interface name is determined
 // by WinTUN, not by the caller. water.Config has no Name field on Windows.
 func setInterfaceName(cfg *water.Config, _ string) {
