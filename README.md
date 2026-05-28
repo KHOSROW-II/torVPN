@@ -450,6 +450,8 @@ torvpn/
 │   │   └── manager.go           ← Circuit rotation, relay scoring
 │   ├── dns/
 │   │   └── server.go            ← Leak-proof DoH resolver
+│   ├── tor/
+│   │   └── controller.go        ← process, connects to its control port, polls bootstrap progress
 │   └── tun/
 │       ├── device.go            ← TUN I/O, packet forwarding
 │       ├── tun_windows.go       ← Windows: WinTUN, netsh (build tag: windows)
