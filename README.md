@@ -80,7 +80,7 @@ Verify: `go version`
 2. Extract the ZIP.  
 3. Add the extracted folder to your system `PATH`:  
    - Open **Environment Variables → New**  
-   - Add the full path (e.g. `C:\tor\`)  
+   - Add the full path (e.g. `\tor\`)  
 4. Verify: `tor.exe --version`
 
 ### 3. WinTUN driver
