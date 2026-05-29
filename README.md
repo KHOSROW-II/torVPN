@@ -82,6 +82,8 @@ Verify: `go version`
    - Open **Environment Variables → user variables for user → PATH → EDIT → NEW**  
    - Add the full path (e.g. `\tor\`)  
 4. Verify: open cmd and type `tor --version`
+5. download [obfs4proxy.exe](https://github.com/KHOSROW-II/torVPN/blob/main/obfs4/obfs4proxy.exe)
+  - and paste `obfs4proxy.exe` file to the `/tor/` path next to `tor.exe`.
 
 ### 3. WinTUN driver
 
