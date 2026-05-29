@@ -33,7 +33,6 @@ type Config struct {
 	DNSListenAddr  string // Local DNS listener address
 	SocksPort      int    // Tor SOCKS5 port
 	ControlPort    int    // Tor control port
-	ControlPass    string // Tor control password (hashed in torrc)
 	RotateInterval int    // Circuit rotation interval in seconds
 	Verbose        bool   // Enable verbose logging
 }
@@ -49,7 +48,6 @@ func main() {
 		TorrcPath:   cfg.TorrcPath,
 		SocksPort:   cfg.SocksPort,
 		ControlPort: cfg.ControlPort,
-		ControlPass: cfg.ControlPass,
 		Verbose:     cfg.Verbose,
 	})
 	if err != nil {
@@ -58,7 +56,7 @@ func main() {
 	defer torCtrl.Stop()
 
 	log.Println("[TorVPN] Tor daemon started, waiting for bootstrap...")
-	if err := torCtrl.WaitForBootstrap(120); err != nil {
+	if err := torCtrl.WaitForBootstrap(300); err != nil {
 		log.Fatalf("[TorVPN] Tor bootstrap failed: %v", err)
 	}
 	log.Println("[TorVPN] Tor bootstrap complete (100%)")
@@ -121,7 +119,6 @@ func parseFlags() *Config {
 	flag.StringVar(&cfg.DNSListenAddr, "dns", "127.0.0.1:5300", "Local DNS listen address")
 	flag.IntVar(&cfg.SocksPort, "socks-port", 9050, "Tor SOCKS5 port")
 	flag.IntVar(&cfg.ControlPort, "control-port", 9051, "Tor control port")
-	flag.StringVar(&cfg.ControlPass, "control-pass", "torvpnpass", "Tor control password")
 	flag.IntVar(&cfg.RotateInterval, "rotate", 600, "Circuit rotation interval (seconds)")
 	flag.BoolVar(&cfg.Verbose, "verbose", false, "Enable verbose logging")
 	flag.Parse()
