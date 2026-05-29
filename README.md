@@ -79,14 +79,14 @@ Verify: `go version`
 1. Download **Tor Expert Bundle** from https://www.torproject.org/download/tor/  
 2. Extract the ZIP.  
 3. Add the extracted folder to your system `PATH`:  
-   - Open **Environment Variables → New**  
+   - Open **Environment Variables → user variables for user → PATH → EDIT → NEW**  
    - Add the full path (e.g. `\tor\`)  
-4. Verify: `tor.exe --version`
+4. Verify: open cmd and type `tor --version`
 
 ### 3. WinTUN driver
 
 1. Download `wintun-x86_64-*.zip` from https://www.wintun.net/  
-2. Extract `wintun.dll` (64-bit version) into the **same directory** as `torvpn.exe`  
+2. Extract `wintun.dll` (64-bit version) into the `torvpn` directory 
    (or into a folder in your `PATH`).
 
 > WinTUN is the same driver WireGuard uses on Windows — it is stable and well-maintained.
@@ -370,6 +370,12 @@ sudo setcap cap_net_admin+eip ./torvpn   # alternative to running as root
 - **Windows:** Ensure `tor.exe` is in PATH or in the current directory
 - **Linux:** `which tor` should return a path; install if missing
 - Test manually: `tor -f configs/torrc`
+
+### error obtaining VCS status
+
+- you can type this `go build -ldflags="-s -w" -buildvcs=false -o torvpn.exe ./cmd/torvpn/`
+  or
+- run with `.\scripts\start_windows.bat`
 
 ### DNS leaks detected
 
