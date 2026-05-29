@@ -56,7 +56,7 @@ func main() {
 	defer torCtrl.Stop()
 
 	log.Println("[TorVPN] Tor daemon started, waiting for bootstrap...")
-	if err := torCtrl.WaitForBootstrap(300); err != nil {
+	if err := torCtrl.WaitForBootstrap(900); err != nil {
 		log.Fatalf("[TorVPN] Tor bootstrap failed: %v", err)
 	}
 	log.Println("[TorVPN] Tor bootstrap complete (100%)")
