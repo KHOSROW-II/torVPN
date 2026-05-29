@@ -84,7 +84,6 @@ torvpn.exe ^
     -dns 127.0.0.1:5300 ^
     -socks-port 9050 ^
     -control-port 9051 ^
-    -control-pass torvpnpass ^
     -rotate 600 ^
     -verbose
 
