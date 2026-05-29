@@ -10,6 +10,7 @@ package tor
 
 import (
 	"bufio"
+	"encoding/hex"
 	"fmt"
 	"log"
 	"net"
@@ -28,7 +29,6 @@ type Options struct {
 	TorrcPath   string
 	SocksPort   int
 	ControlPort int
-	ControlPass string
 	Verbose     bool
 }
 
@@ -121,9 +121,32 @@ func (c *Controller) connectControl() error {
 	return nil
 }
 
-// authenticate sends AUTHENTICATE to the Tor control port.
+// authenticate reads Tor's cookie file and sends AUTHENTICATE with its hex value.
+// CookieAuthentication is simpler and more reliable than HashedControlPassword.
 func (c *Controller) authenticate() error {
-	cmd := fmt.Sprintf(`AUTHENTICATE "%s"`, c.opts.ControlPass)
+	// Cookie file lives in the DataDirectory configured in torrc.
+	// We look next to the torrc file first, then fall back to "tor-data" relative to CWD.
+	cookiePaths := []string{
+		filepath.Join(filepath.Dir(c.opts.TorrcPath), "tor-data", "control_auth_cookie"),
+		filepath.Join("tor-data", "control_auth_cookie"),
+	}
+
+	var cookie []byte
+	for _, p := range cookiePaths {
+		data, err := os.ReadFile(p)
+		if err == nil {
+			cookie = data
+			if c.opts.Verbose {
+				log.Printf("[Tor] Read auth cookie from %s", p)
+			}
+			break
+		}
+	}
+	if cookie == nil {
+		return fmt.Errorf("could not read control_auth_cookie — checked: %v", cookiePaths)
+	}
+
+	cmd := fmt.Sprintf("AUTHENTICATE %s", hex.EncodeToString(cookie))
 	reply, err := c.sendCommand(cmd)
 	if err != nil {
 		return err
@@ -270,15 +293,12 @@ func ensureTorrc(opts Options) error {
 		return err
 	}
 
-	// Hash the control password so we never store it in plaintext.
-	// NOTE: in production, run `tor --hash-password <pass>` and hard-code the hash.
-	// Here we use a well-known default hash for "torvpnpass" — CHANGE THIS.
 	torrc := fmt.Sprintf(`## TorVPN auto-generated torrc
 ## Edit this file for advanced tuning. See: https://2019.www.torproject.org/docs/tor-manual.html
 
 SocksPort %d
 ControlPort %d
-HashedControlPassword 16:872860B76453A77D60CA2BB8C1A7042072093276A3D701AD684053EC4C
+CookieAuthentication 1
 
 ## ── Performance tuning ──────────────────────────────────────────────────────
 # Reduce circuit build timeout so stalled builds fail fast
@@ -303,7 +323,7 @@ FetchUselessDescriptors 0
 
 ## ── Logging ─────────────────────────────────────────────────────────────────
 Log notice stdout
-DataDirectory /tmp/tor-data
+DataDirectory tor-data
 `,
 		opts.SocksPort, opts.ControlPort)
 
