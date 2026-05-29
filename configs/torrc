@@ -7,16 +7,17 @@
 ## ── Ports ────────────────────────────────────────────────────────────────────
 SocksPort 9050
 ControlPort 9051
+HTTPTunnelPort 8118
 
 ## ── Authentication ───────────────────────────────────────────────────────────
 ## Hash generated with: tor --hash-password "torvpnpass"
 ## REPLACE THIS HASH if you change the password!
-HashedControlPassword 16:872860B76453A77D60CA2BB8C1A7042072093276A3D701AD684053EC4C
+CookieAuthentication 1
 
 ## ── Data storage ─────────────────────────────────────────────────────────────
 ## Windows: change to %APPDATA%\tor  (use forward slashes in the path)
 ## Linux:   /var/lib/tor or /tmp/tor-data (writable by your user)
-DataDirectory /tmp/tor-data
+DataDirectory tor-data
 
 ## ── Performance ──────────────────────────────────────────────────────────────
 ##
@@ -80,10 +81,10 @@ StrictNodes 0
 ## 3. Uncomment and paste your bridge lines below:
 
 # UseBridges 1
-# ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy
+# ClientTransportPlugin obfs4 exec obfs4proxy.exe
 #
-# Bridge obfs4 192.0.2.1:443 FINGERPRINT cert=XXXX iat-mode=0
-# Bridge obfs4 192.0.2.2:8080 FINGERPRINT cert=YYYY iat-mode=0
+# Bridge obfs4 obfs4 188.103.3.155:8080 47CD157813D346BCC2AC317B2BD6D0E938713747 cert=WA56UpJ3QJK48Mdc7km6AfQ9WFr5jjDH+QO6TvepZ/fdntRzG+/njxIO9SjoE0MlJ6+hYw iat-mode=0
+# Bridge obfs4 obfs4 23.94.67.165:8443 FE3A1689F7C0A05EA2A19ED29CCF0C1232FB3C80 cert=TpjGpYEVMYDr20KSEAV7ejlX8QdBL5j6VsnqVjukgK+6V7CpC7onEFLnozaOpOw3Lef8Bw iat-mode=0
 
 ## ── Logging ──────────────────────────────────────────────────────────────────
 ## "notice" is quiet; change to "info" for verbose output; "debug" for full trace.
