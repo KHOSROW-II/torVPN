@@ -201,6 +201,8 @@ Invoke-WebRequest -Uri "https://check.torproject.org/api/ip" | Select-Object -Ex
 Invoke-WebRequest -Uri "https://dnsleaktest.com" -UseBasicParsing
 ```
 
+> after run vpn yoy can connect to HTTP proxy: `127.0.0.1:8118` and SOCKS proxy: `127.0.0.1:9050`
+
 ---
 
 ## Running on Linux
