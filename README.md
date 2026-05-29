@@ -5,9 +5,9 @@ Implemented in Go — designed for Windows first, Linux-compatible with no code 
 
 ```
   ┌─────────────┐     ┌──────────────┐    ┌──────────────┐     ┌──────────────┐
-  │  Your app   │───▶│  TUN device  │───▶│  Tor SOCKS5  │───▶│  Tor Network │
-  │  (any OS)   │     │  torvpn      │    │  127.0.0.1   │     │  → Internet  │
-  └─────────────┘     └──────────────┘    │  :9050       │     └──────────────┘
+  │  Your app   │───▶│  TUN device  │───▶│  Tor proxy   │───▶│  Tor Network │
+  │  (any OS)   │     │  torvpn      │    │   127.0.0.1  │     │  → Internet  │
+  └─────────────┘     └──────────────┘    │  :9050/8118  │     └──────────────┘
                                           └──────────────┘
                           ▲
                      ┌────┴────────┐
