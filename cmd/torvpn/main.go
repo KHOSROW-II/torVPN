@@ -19,10 +19,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/yourusername/torvpn/internal/circuit"
-	"github.com/yourusername/torvpn/internal/dns"
-	"github.com/yourusername/torvpn/internal/tor"
-	"github.com/yourusername/torvpn/internal/tun"
+	"github.com/KHOSROW-II/torvpn/internal/circuit"
+	"github.com/KHOSROW-II/torvpn/internal/dns"
+	"github.com/KHOSROW-II/torvpn/internal/tor"
+	"github.com/KHOSROW-II/torvpn/internal/tun"
 )
 
 // Config holds all runtime configuration for TorVPN.
