@@ -414,6 +414,10 @@ relayTicker := time.NewTicker(4 * time.Hour)  // was 30 minutes
 - The WinTUN adapter may not be visible until TorVPN has started once
 - Check adapter name in Device Manager
 
+### bootstrap time out
+
+- If the bootstrap process timed out, just rerun the project because the process is saved.
+
 ### Routes not removed after crash
 
 **Windows:**
