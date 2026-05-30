@@ -1,1 +1,0 @@
-Copy and paste the obfs4proxy.exe file to the /tor/ path next to tor.exe.
