@@ -162,26 +162,27 @@ func (c *Controller) authenticate() error {
 // timeoutSecs is the maximum number of seconds to wait.
 func (c *Controller) WaitForBootstrap(timeoutSecs int) error {
 	deadline := time.Now().Add(time.Duration(timeoutSecs) * time.Second)
+	lastProgress := ""
 	for time.Now().Before(deadline) {
 		reply, err := c.sendCommand("GETINFO status/bootstrap-phase")
 		if err != nil {
 			return fmt.Errorf("getinfo bootstrap: %w", err)
 		}
-		// Example reply: 250-status/bootstrap-phase=NOTICE BOOTSTRAP PROGRESS=100 TAG=done SUMMARY="Done"
 		if strings.Contains(reply, "PROGRESS=100") {
 			return nil
 		}
-		// Extract and log progress
-		if c.opts.Verbose {
-			if idx := strings.Index(reply, "PROGRESS="); idx != -1 {
-				progress := reply[idx+9:]
-				if sp := strings.IndexByte(progress, ' '); sp != -1 {
-					progress = progress[:sp]
-				}
+		// Only log when progress actually changes (reduces spam on slow networks)
+		if idx := strings.Index(reply, "PROGRESS="); idx != -1 {
+			progress := reply[idx+9:]
+			if sp := strings.IndexByte(progress, ' '); sp != -1 {
+				progress = progress[:sp]
+			}
+			if progress != lastProgress {
 				log.Printf("[Tor] Bootstrap progress: %s%%", progress)
+				lastProgress = progress
 			}
 		}
-		time.Sleep(3 * time.Second)
+		time.Sleep(10 * time.Second)
 	}
 	return fmt.Errorf("bootstrap timed out after %d seconds", timeoutSecs)
 }
