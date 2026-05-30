@@ -56,10 +56,13 @@ func main() {
 	defer torCtrl.Stop()
 
 	log.Println("[TorVPN] Tor daemon started, waiting for bootstrap...")
-	if err := torCtrl.WaitForBootstrap(900); err != nil {
-		log.Fatalf("[TorVPN] Tor bootstrap failed: %v", err)
+	if err := torCtrl.WaitForBootstrap(300); err != nil {
+		log.Printf("[TorVPN] WARNING: %v", err)
+		log.Println("[TorVPN] Tor not fully bootstrapped — continuing anyway. Traffic may fail until Tor connects.")
+		log.Println("[TorVPN] TIP: If bootstrap is slow, enable obfs4 bridges in configs/torrc")
+	} else {
+		log.Println("[TorVPN] Tor bootstrap complete (100%)")
 	}
-	log.Println("[TorVPN] Tor bootstrap complete (100%)")
 
 	// ── 2. Start circuit manager ─────────────────────────────────────────────
 	cm := circuit.NewManager(circuit.ManagerOptions{
