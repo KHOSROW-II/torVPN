@@ -11,7 +11,7 @@ import (
 "sync"
 "time"
 
-"github.com/yourusername/torvpn/internal/tor"
+"github.com/KHOSROW-II/torvpn/internal/tor"
 )
 
 // TorController uses tor.CircuitInfo directly — no duplicate type needed.
