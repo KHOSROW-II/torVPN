@@ -7,16 +7,19 @@
 ## ── Ports ────────────────────────────────────────────────────────────────────
 SocksPort 9050
 ControlPort 9051
+
+## HTTP CONNECT proxy — for apps/browsers using HTTP proxy instead of SOCKS5.
+## Set your browser/system HTTP proxy to 127.0.0.1:8118
 HTTPTunnelPort 8118
 
 ## ── Authentication ───────────────────────────────────────────────────────────
-## Hash generated with: tor --hash-password "torvpnpass"
-## REPLACE THIS HASH if you change the password!
+## Cookie auth: Tor writes a binary cookie file; the controller reads and sends it.
+## No password needed — simpler and more reliable than HashedControlPassword.
 CookieAuthentication 1
 
 ## ── Data storage ─────────────────────────────────────────────────────────────
-## Windows: change to %APPDATA%\tor  (use forward slashes in the path)
-## Linux:   /var/lib/tor or /tmp/tor-data (writable by your user)
+## Relative path — creates tor-data/ next to torvpn.exe on Windows,
+## or next to the binary on Linux. Change to an absolute path if preferred.
 DataDirectory tor-data
 
 ## ── Performance ──────────────────────────────────────────────────────────────
@@ -52,20 +55,16 @@ FetchUselessDescriptors 0
 ##   3 provides a good balance of security and availability.
 NumEntryGuards 3
 
+## ── Directory / bootstrap tuning ─────────────────────────────────────────────
+##
+## Help Tor fetch the consensus faster on slow/restricted networks.
+FetchDirInfoEarly 1
+FetchDirInfoExtraEarly 1
+
 ## ── Relay selection hints ─────────────────────────────────────────────────────
 ##
-## Tor chooses relays by bandwidth-weighted probability. These options bias
-## the selection without hard-coding specific relays.
-##
-## Prefer relays with high consensus weight (faster paths):
-## (Tor handles this automatically; no special flag needed.)
-
-## ExcludeExitNodes: exclude unreliable exit country codes.
-## Uncomment and customise if you experience connectivity issues.
+## ExcludeExitNodes: exclude unreliable exit country codes (optional).
 # ExcludeExitNodes {RU},{CN},{IR},{KP}
-
-## StrictNodes: set to 1 to ENFORCE ExcludeExitNodes strictly.
-##   0 = use excluded nodes as a last resort (safer for availability).
 StrictNodes 0
 
 ## ── Pluggable Transports / Bridges ───────────────────────────────────────────
@@ -80,11 +79,18 @@ StrictNodes 0
 ##
 ## 3. Uncomment and paste your bridge lines below:
 
+## ── HOW TO ENABLE BRIDGES (required on restricted networks) ─────────────────
+##
+## Step 1: Get bridge lines from https://bridges.torproject.org/ (choose obfs4)
+## Step 2: Download obfs4proxy.exe from https://github.com/Tor-/obfs4/releases
+##          Place obfs4proxy.exe in the same folder as tor.exe
+## Step 3: Uncomment the 4 lines below and paste your bridge lines:
+##
 # UseBridges 1
 # ClientTransportPlugin obfs4 exec obfs4proxy.exe
-#
-# Bridge obfs4 obfs4 188.103.3.155:8080 47CD157813D346BCC2AC317B2BD6D0E938713747 cert=WA56UpJ3QJK48Mdc7km6AfQ9WFr5jjDH+QO6TvepZ/fdntRzG+/njxIO9SjoE0MlJ6+hYw iat-mode=0
-# Bridge obfs4 obfs4 23.94.67.165:8443 FE3A1689F7C0A05EA2A19ED29CCF0C1232FB3C80 cert=TpjGpYEVMYDr20KSEAV7ejlX8QdBL5j6VsnqVjukgK+6V7CpC7onEFLnozaOpOw3Lef8Bw iat-mode=0
+# Bridge obfs4 <IP>:<PORT> <FINGERPRINT> cert=<CERT> iat-mode=0
+# Bridge obfs4 <IP>:<PORT> <FINGERPRINT> cert=<CERT> iat-mode=0
+# Bridge obfs4 <IP>:<PORT> <FINGERPRINT> cert=<CERT> iat-mode=0
 
 ## ── Logging ──────────────────────────────────────────────────────────────────
 ## "notice" is quiet; change to "info" for verbose output; "debug" for full trace.
