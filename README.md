@@ -314,7 +314,9 @@ Typical Tor latency: 300–600ms additional per hop. HTTP/2 and connection keep-
 
 ## Using Bridges (obfs4)
 
-If your ISP throttles or blocks Tor, use **obfs4 bridges**:
+ - If your ISP throttles or blocks Tor, use **obfs4 bridges**:
+ - But if the process still doesn't progress or is extremely slow, you can change the path of the config/torrc configuration file in the folders and remove the hashtags from lines 83 to 87.
+
 
 ### 1. Install obfs4proxy
 
