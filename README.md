@@ -490,4 +490,4 @@ torvpn/
 
 ## License
 
-MIT — see LICENSE file.
+MIT — [see LICENSE file](https://github.com/KHOSROW-II/torVPN/blob/main/LICENSE).
