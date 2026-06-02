@@ -187,55 +187,6 @@ func (c *Controller) WaitForBootstrap(timeoutSecs int) error {
 	return fmt.Errorf("bootstrap timed out after %d seconds", timeoutSecs)
 }
 
-
-// WaitForBootstrapWithCallback is like WaitForBootstrap but calls cb on each
-// progress change. Used by the GUI to stream live bootstrap updates.
-func (c *Controller) WaitForBootstrapWithCallback(timeoutSecs int, cb func(pct int, tag, summary string)) error {
-	deadline := time.Now().Add(time.Duration(timeoutSecs) * time.Second)
-	lastPct := -1
-	for time.Now().Before(deadline) {
-		reply, err := c.sendCommand("GETINFO status/bootstrap-phase")
-		if err != nil {
-			return fmt.Errorf("getinfo bootstrap: %w", err)
-		}
-		if strings.Contains(reply, "PROGRESS=100") {
-			if cb != nil {
-				cb(100, "done", "Done")
-			}
-			return nil
-		}
-		pct := 0
-		tag := ""
-		summary := ""
-		if idx := strings.Index(reply, "PROGRESS="); idx != -1 {
-			s := reply[idx+9:]
-			if sp := strings.IndexByte(s, ' '); sp != -1 {
-				fmt.Sscanf(s[:sp], "%d", &pct)
-			}
-		}
-		if idx := strings.Index(reply, "TAG="); idx != -1 {
-			s := reply[idx+4:]
-			if sp := strings.IndexByte(s, ' '); sp != -1 {
-				tag = s[:sp]
-			} else {
-				tag = strings.TrimSpace(s)
-			}
-		}
-		if idx := strings.Index(reply, "SUMMARY=\""); idx != -1 {
-			s := reply[idx+9:]
-			if eq := strings.Index(s, "\""); eq != -1 {
-				summary = s[:eq]
-			}
-		}
-		if pct != lastPct && cb != nil {
-			cb(pct, tag, summary)
-			lastPct = pct
-		}
-		time.Sleep(5 * time.Second)
-	}
-	return fmt.Errorf("bootstrap timed out after %d seconds", timeoutSecs)
-}
-
 // NewCircuit sends SIGNAL NEWNYM to rotate all Tor circuits.
 func (c *Controller) NewCircuit() error {
 	reply, err := c.sendCommand("SIGNAL NEWNYM")
@@ -267,21 +218,10 @@ func (c *Controller) GetCircuitInfo() ([]CircuitInfo, error) {
 		if err != nil {
 			continue
 		}
-		path := ""
-		purpose := ""
-		if len(parts) > 2 {
-			path = parts[2]
-		}
-		for _, p := range parts[3:] {
-			if strings.HasPrefix(p, "PURPOSE=") {
-				purpose = strings.TrimPrefix(p, "PURPOSE=")
-			}
-		}
 		circuits = append(circuits, CircuitInfo{
-			ID:      id,
-			Status:  parts[1],
-			Path:    path,
-			Purpose: purpose,
+			ID:     id,
+			Status: parts[1],
+			Path:   strings.Join(parts[2:], " "),
 		})
 	}
 	return circuits, nil
@@ -338,10 +278,9 @@ func (c *Controller) sendCommand(cmd string) (string, error) {
 
 // CircuitInfo holds parsed circuit information from GETINFO circuit-status.
 type CircuitInfo struct {
-	ID      int
-	Status  string
-	Path    string // e.g. "$FP1~name1,$FP2~name2,$FP3~name3"
-	Purpose string // e.g. "GENERAL", "HS_VANGUARDS", "CONFLUX_UNLINKED"
+	ID     int
+	Status string
+	Path   string // e.g. "$FP1~name1,$FP2~name2,$FP3~name3"
 }
 
 // ensureTorrc writes a performance-tuned torrc if none exists.
