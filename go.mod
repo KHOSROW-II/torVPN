@@ -1,4 +1,4 @@
-module github.com/KHOSROW-II/torvpn
+module github.com/KHOSROW-II/torVPN
 
 go 1.22
 
