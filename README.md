@@ -158,7 +158,7 @@ https://github.com/KHOSROW-II/torVPN.git
 cd torvpn
 
 # Download Go dependencies
-go mod downlaod
+go mod download
 go mod tidy
 
 # Build for current OS
