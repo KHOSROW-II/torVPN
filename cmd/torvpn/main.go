@@ -28,7 +28,7 @@ import (
 	"time"
 
 	"github.com/KHOSROW-II/torVPN/internal/api"
-	"github.com/KHOSROW-I/torVPN/internal/circuit"
+	"github.com/KHOSROW-II/torVPN/internal/circuit"
 	"github.com/KHOSROW-II/torVPN/internal/dns"
 	"github.com/KHOSROW-II/torVPN/internal/tor"
 	"github.com/KHOSROW-II/torVPN/internal/tun"
