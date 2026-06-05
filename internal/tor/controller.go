@@ -272,9 +272,11 @@ func (c *Controller) GetCircuitInfo() ([]CircuitInfo, error) {
 		if len(parts) > 2 {
 			path = parts[2]
 		}
-		for _, p := range parts[3:] {
-			if strings.HasPrefix(p, "PURPOSE=") {
-				purpose = strings.TrimPrefix(p, "PURPOSE=")
+		if len(parts) > 3 {
+			for _, p := range parts[3:] {
+				if strings.HasPrefix(p, "PURPOSE=") {
+					purpose = strings.TrimPrefix(p, "PURPOSE=")
+				}
 			}
 		}
 		circuits = append(circuits, CircuitInfo{
