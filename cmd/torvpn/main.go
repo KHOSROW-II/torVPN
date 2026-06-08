@@ -208,15 +208,29 @@ func (a *App) connect() error {
 	a.apiServer.BroadcastLog("notice",
 		"[TorVPN] TUN interface up — all traffic routed through Tor")
 
-	// Push initial circuit list
-	time.Sleep(500 * time.Millisecond)
-	a.apiServer.Broadcast(api.OutMsg{
-		Type:     "circuit",
-		Circuits: a.getCircuits(),
-	})
+	// Wait a moment for Tor to build first circuits before querying them.
+	// Querying too early causes "Application request when we haven't used
+	// client functionality lately" spam in the Tor log.
+	go func() {
+		time.Sleep(3 * time.Second)
+		a.mu.Lock()
+		if a.state != "connected" {
+			a.mu.Unlock()
+			return
+		}
+		a.mu.Unlock()
 
-	// Detect exit IP
-	go a.detectExitIP()
+		circuits := a.getCircuits()
+		if len(circuits) > 0 {
+			a.apiServer.Broadcast(api.OutMsg{
+				Type:     "circuit",
+				Circuits: circuits,
+			})
+		}
+
+		// Detect exit IP after circuits are ready
+		a.detectExitIP()
+	}()
 
 	// Start stats ticker
 	go a.statsTicker()
@@ -262,7 +276,15 @@ func (a *App) newCircuit() error {
 	return ctrl.NewCircuit()
 }
 
-func (a *App) getCircuits() []api.CircuitMsg {
+func (a *App) getCircuits() (result []api.CircuitMsg) {
+	// recover so a malformed circuit-status reply can never crash the process
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("[Circuit] getCircuits recovered from panic: %v", r)
+			result = nil
+		}
+	}()
+
 	a.mu.Lock()
 	ctrl := a.torCtrl
 	a.mu.Unlock()
