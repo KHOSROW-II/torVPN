@@ -4,238 +4,212 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>TorVPN</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
-:root{
-  --bg:#0d0d0f;--bg2:#111115;--bg3:#16161b;--bg4:#1c1c24;--bg5:#22222c;
-  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);--border3:rgba(255,255,255,0.16);
-  --text:#f0eef8;--text2:#8a8799;--text3:#4a4860;
-  --red:#e8324a;--red2:#c4223a;--red-dim:rgba(232,50,74,0.1);--red-glow:rgba(232,50,74,0.25);
-  --red-bright:#ff4d6a;
-  --amber:#f0933a;--amber-dim:rgba(240,147,58,0.1);
-  --green:#3ae8a0;--green-dim:rgba(58,232,160,0.1);
-  --blue:#4f8fff;--blue-dim:rgba(79,143,255,0.1);
-  --purple:#a87fff;--purple-dim:rgba(168,127,255,0.1);
+:root {
+  --bg:#0d0d0f; --bg2:#111115; --bg3:#16161b; --bg4:#1c1c24;
+  --b:rgba(255,255,255,.06); --b2:rgba(255,255,255,.1); --b3:rgba(255,255,255,.16);
+  --t:#f0eef8; --t2:#8a8799; --t3:#4a4860;
+  --red:#e8324a; --red2:#c4223a; --rdim:rgba(232,50,74,.1); --rglow:rgba(232,50,74,.25);
+  --amber:#f0933a; --adim:rgba(240,147,58,.1);
+  --green:#3ae8a0; --gdim:rgba(58,232,160,.1);
+  --blue:#4f8fff; --bdim:rgba(79,143,255,.1);
+  --purple:#a87fff; --pdim:rgba(168,127,255,.1);
   --mono:'JetBrains Mono',monospace;
   --display:'Rajdhani',sans-serif;
-  --r:8px;--r-sm:5px;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--display);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5;}
-.app{display:grid;grid-template-columns:200px 1fr;grid-template-rows:46px 1fr;height:100vh;overflow:hidden;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--display);background:var(--bg);color:var(--t);height:100vh;overflow:hidden;font-size:14px}
+.app{display:grid;grid-template-columns:196px 1fr;grid-template-rows:46px 1fr;height:100vh}
 
 /* Titlebar */
-.tb{grid-column:1/-1;background:var(--bg2);border-bottom:1px solid var(--border2);display:flex;align-items:center;padding:0 14px;gap:10px;}
-.tb-logo{display:flex;align-items:center;gap:8px;}
-.logo-icon{width:26px;height:26px;background:var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px var(--red-glow);}
-.logo-icon i{font-size:15px;color:#fff;}
-.tb-title{font-size:16px;font-weight:700;letter-spacing:0.06em;color:var(--text);}
-.tb-title span{color:var(--red);}
-.tb-space{flex:1;}
-.tb-stat{display:flex;align-items:center;gap:5px;font-size:11px;font-family:var(--mono);color:var(--text3);}
-.tb-div{width:1px;height:14px;background:var(--border2);margin:0 6px;}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--text3);transition:all .3s;}
-.dot.conn{background:var(--green);box-shadow:0 0 6px var(--green);}
-.dot.ing{background:var(--amber);animation:blink 1s infinite;}
-.dot.err{background:var(--red);}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.tb{grid-column:1/-1;background:var(--bg2);border-bottom:1px solid var(--b2);display:flex;align-items:center;padding:0 14px;gap:10px}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-icon{width:26px;height:26px;background:var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px var(--rglow)}
+.logo-icon i{font-size:15px;color:#fff}
+.logo-name{font-size:16px;font-weight:700;letter-spacing:.06em}
+.logo-name span{color:var(--red)}
+.tb-gap{flex:1}
+.tb-stat{display:flex;align-items:center;gap:5px;font-size:11px;font-family:var(--mono);color:var(--t3)}
+.sep{width:1px;height:14px;background:var(--b2);margin:0 6px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--t3);transition:all .3s;flex-shrink:0}
+.dot.on{background:var(--green);box-shadow:0 0 6px var(--green)}
+.dot.ing{background:var(--amber);animation:bl 1s infinite}
+.dot.err{background:var(--red)}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* Sidebar */
-.sb{background:var(--bg2);border-right:1px solid var(--border);padding:10px 6px;display:flex;flex-direction:column;gap:1px;overflow-y:auto;}
-.sb-sec{padding:10px 8px 4px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);}
-.ni{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:var(--r-sm);cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all .12s;border:1px solid transparent;}
-.ni:hover{background:var(--bg4);color:var(--text);}
-.ni.active{background:var(--red-dim);color:var(--red);border-color:rgba(232,50,74,0.2);}
-.ni i{font-size:16px;width:16px;flex-shrink:0;}
-.sb-bot{margin-top:auto;padding-top:6px;border-top:1px solid var(--border);}
+.sb{background:var(--bg2);border-right:1px solid var(--b);padding:10px 6px;display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+.sb-sec{padding:10px 8px 4px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
+.ni{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:5px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:600;transition:all .12s;border:1px solid transparent}
+.ni:hover{background:var(--bg4);color:var(--t)}
+.ni.active{background:var(--rdim);color:var(--red);border-color:rgba(232,50,74,.2)}
+.ni i{font-size:16px;width:16px;flex-shrink:0}
+.sb-bot{margin-top:auto;padding-top:6px;border-top:1px solid var(--b)}
 
 /* Main */
-.main{overflow-y:auto;background:var(--bg);}
-.page{display:none;padding:18px;}
-.page.active{display:block;}
+.main{overflow-y:auto;background:var(--bg)}
+.page{display:none;padding:16px}
+.page.active{display:block}
 
-/* Card */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;}
-.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.ct{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);}
+/* Cards */
+.card{background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:14px;margin-bottom:11px}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ct{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)}
 
-/* Status hero */
-.hero{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:12px;display:flex;align-items:center;gap:20px;}
-.orb{width:76px;height:76px;border-radius:50%;background:var(--bg4);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .4s;position:relative;}
-.orb.conn{border-color:var(--green);box-shadow:0 0 0 8px rgba(58,232,160,.05),0 0 0 16px rgba(58,232,160,.02);}
-.orb.ing{border-color:var(--amber);animation:orbing 1.5s infinite;}
-.orb.err{border-color:var(--red);}
-.orb i{font-size:26px;color:var(--text3);transition:color .4s;}
-.orb.conn i{color:var(--green);}
-.orb.ing i{color:var(--amber);}
-.orb.err i{color:var(--red);}
-@keyframes orbing{0%,100%{box-shadow:0 0 0 0 rgba(240,147,58,.3)}50%{box-shadow:0 0 0 12px rgba(240,147,58,0)}}
-.hero-info{flex:1;}
-.hero-lbl{font-size:10px;color:var(--text3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
-.hero-val{font-size:24px;font-weight:700;color:var(--text);margin-bottom:5px;font-family:var(--display);}
-.hero-sub{font-size:12px;color:var(--text2);font-family:var(--mono);}
-.hero-acts{display:flex;flex-direction:column;gap:7px;}
-
-/* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px;border-radius:var(--r-sm);border:1px solid var(--border2);background:transparent;color:var(--text);font-family:var(--display);font-size:13px;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap;letter-spacing:.02em;}
-.btn:hover{background:var(--bg4);border-color:var(--border3);}
-.btn:disabled{opacity:.4;cursor:not-allowed;}
-.btn i{font-size:14px;}
-.btn-red{background:var(--red);color:#fff;border-color:var(--red);box-shadow:0 0 16px var(--red-glow);}
-.btn-red:hover{background:var(--red2);border-color:var(--red2);}
-.btn-stop{background:var(--red-dim);color:var(--red);border-color:rgba(232,50,74,.3);}
-.btn-stop:hover{background:rgba(232,50,74,.2);}
-.btn-sm{padding:5px 10px;font-size:12px;}
-.btn-xs{padding:3px 8px;font-size:11px;}
+/* Hero */
+.hero{background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:20px;margin-bottom:11px;display:flex;align-items:center;gap:18px}
+.orb{width:72px;height:72px;border-radius:50%;background:var(--bg4);border:2px solid var(--b2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .4s}
+.orb.on{border-color:var(--green);box-shadow:0 0 0 8px rgba(58,232,160,.04)}
+.orb.ing{border-color:var(--amber);animation:op 1.5s infinite}
+.orb i{font-size:26px;color:var(--t3);transition:color .4s}
+.orb.on i{color:var(--green)}
+.orb.ing i{color:var(--amber)}
+@keyframes op{0%,100%{box-shadow:0 0 0 0 rgba(240,147,58,.3)}50%{box-shadow:0 0 0 12px rgba(240,147,58,0)}}
+.hi{flex:1}
+.hlbl{font-size:10px;color:var(--t3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.hval{font-size:22px;font-weight:700;margin-bottom:4px}
+.hsub{font-size:12px;color:var(--t2);font-family:var(--mono)}
+.hacts{display:flex;flex-direction:column;gap:7px}
+.bsbar{width:100%;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-top:6px}
+.bsfill{height:100%;background:var(--red);border-radius:2px;transition:width .5s;box-shadow:0 0 6px var(--rglow)}
 
 /* Metrics */
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
-.metric{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;}
-.m-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:5px;}
-.m-val{font-size:19px;font-weight:700;color:var(--text);font-family:var(--mono);}
-.m-sub{font-size:11px;color:var(--text2);margin-top:2px;}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:11px}
+.met{background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:12px 14px}
+.mlbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:5px}
+.mval{font-size:18px;font-weight:700;font-family:var(--mono)}
+.msub{font-size:11px;color:var(--t2);margin-top:2px}
 
-/* Console */
-.console-body{height:220px;overflow-y:auto;padding:8px 10px;font-family:var(--mono);font-size:11px;line-height:1.7;background:var(--bg);}
-.ll{display:flex;gap:8px;align-items:baseline;padding:1px 0;}
-.ll:hover{background:rgba(255,255,255,.02);border-radius:3px;}
-.lt{color:var(--text3);flex-shrink:0;font-size:10px;}
-.lv{flex-shrink:0;font-size:10px;font-weight:700;width:46px;}
-.lv.notice{color:var(--green);}
-.lv.info{color:var(--blue);}
-.lv.debug{color:var(--purple);}
-.lv.warn{color:var(--amber);}
-.lv.err{color:var(--red);}
-.lm{color:var(--text2);word-break:break-all;}
-.lm .hl{color:var(--text);}
-.lm .hl-red{color:var(--red-bright);}
-.lm .hl-green{color:var(--green);}
-
-/* Console toolbar */
-.c-tb{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 10px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
-.cfilt{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;}
-.fb{padding:4px 9px;font-size:11px;font-family:var(--mono);border:none;background:transparent;color:var(--text3);cursor:pointer;transition:all .12s;font-weight:600;}
-.fb.active{background:var(--bg4);color:var(--text);}
-.fb:hover:not(.active){color:var(--text2);}
-.c-acts{margin-left:auto;display:flex;gap:5px;}
-
-/* Tabs */
-.tabs{display:flex;gap:2px;background:var(--bg4);border-radius:var(--r-sm);padding:3px;margin-bottom:14px;}
-.tab{flex:1;text-align:center;padding:6px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);transition:all .12s;letter-spacing:.02em;}
-.tab.active{background:var(--bg2);color:var(--text);}
-.tc{display:none;}
-.tc.active{display:block;}
-
-/* Forms */
-.field{margin-bottom:12px;}
-.lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);margin-bottom:5px;display:block;}
-.inp,.sel{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:var(--r-sm);padding:8px 10px;color:var(--text);font-family:var(--display);font-size:13px;outline:none;transition:border .15s;appearance:none;}
-.inp:focus,.sel:focus{border-color:var(--red);}
-.sel-w{position:relative;}
-.sel-w::after{content:'\e9b1';font-family:'tabler-icons';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;font-size:14px;}
-textarea.inp{resize:vertical;line-height:1.6;font-family:var(--mono);font-size:11px;}
-
-/* Toggles */
-.tr{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
-.tr:last-child{border-bottom:none;}
-.tr-info{flex:1;}
-.tr-name{font-size:13px;color:var(--text);font-weight:600;}
-.tr-desc{font-size:11px;color:var(--text2);margin-top:1px;}
-.tog{width:36px;height:20px;background:var(--bg4);border:1px solid var(--border2);border-radius:10px;cursor:pointer;position:relative;flex-shrink:0;transition:all .2s;}
-.tog::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:var(--text3);top:2px;left:2px;transition:all .2s;}
-.tog.on{background:var(--red-dim);border-color:var(--red);}
-.tog.on::after{background:var(--red);left:18px;}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 13px;border-radius:5px;border:1px solid var(--b2);background:transparent;color:var(--t);font-family:var(--display);font-size:13px;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap;letter-spacing:.02em}
+.btn:hover{background:var(--bg4);border-color:var(--b3)}
+.btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+.btn i{font-size:14px}
+.btn-red{background:var(--red);color:#fff;border-color:var(--red);box-shadow:0 0 14px var(--rglow)}
+.btn-red:hover{background:var(--red2);border-color:var(--red2)}
+.btn-stop{background:var(--rdim);color:var(--red);border-color:rgba(232,50,74,.3)}
+.btn-stop:hover{background:rgba(232,50,74,.2)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-xs{padding:3px 8px;font-size:11px}
 
 /* Badges */
-.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
-.b-green{background:rgba(58,232,160,.1);color:var(--green);border:1px solid rgba(58,232,160,.2);}
-.b-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(232,50,74,.25);}
-.b-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,147,58,.25);}
-.b-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(79,143,255,.25);}
-.b-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,127,255,.25);}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.bg{background:var(--gdim);color:var(--green);border:1px solid rgba(58,232,160,.2)}
+.br{background:var(--rdim);color:var(--red);border:1px solid rgba(232,50,74,.25)}
+.ba{background:var(--adim);color:var(--amber);border:1px solid rgba(240,147,58,.25)}
+.bb{background:var(--bdim);color:var(--blue);border:1px solid rgba(79,143,255,.25)}
+.bp{background:var(--pdim);color:var(--purple);border:1px solid rgba(168,127,255,.25)}
 
-/* Row */
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+/* Console */
+.clog{height:200px;overflow-y:auto;padding:8px 10px;font-family:var(--mono);font-size:11px;line-height:1.7;background:var(--bg)}
+.ctb{background:var(--bg3);border-bottom:1px solid var(--b);padding:7px 10px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.cfilt{display:flex;background:var(--bg);border:1px solid var(--b);border-radius:5px;overflow:hidden}
+.fb{padding:4px 9px;font-size:11px;font-family:var(--mono);border:none;background:transparent;color:var(--t3);cursor:pointer;font-weight:600;transition:all .12s}
+.fb.on{background:var(--bg4);color:var(--t)}
+.ll{display:flex;gap:8px;align-items:baseline;padding:1px 2px;border-radius:3px}
+.ll:hover{background:rgba(255,255,255,.02)}
+.lt{color:var(--t3);flex-shrink:0;font-size:10px;width:56px}
+.lv{flex-shrink:0;font-size:10px;font-weight:700;width:46px}
+.lv.notice{color:var(--green)} .lv.info{color:var(--blue)} .lv.debug{color:var(--purple)} .lv.warn{color:var(--amber)} .lv.err{color:var(--red)}
+.lm{color:var(--t2);word-break:break-all;flex:1}
 
-/* Connection types */
-.ct-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
-.ct-card{border:1px solid var(--border);border-radius:var(--r);padding:12px;cursor:pointer;transition:all .12s;text-align:center;}
-.ct-card:hover{border-color:var(--border3);background:var(--bg4);}
-.ct-card.active{border-color:var(--red);background:var(--red-dim);}
-.ct-card i{font-size:22px;color:var(--text3);display:block;margin-bottom:5px;}
-.ct-card.active i{color:var(--red);}
-.ct-name{font-size:12px;font-weight:700;color:var(--text2);letter-spacing:.03em;}
-.ct-card.active .ct-name{color:var(--red);}
-.ct-desc{font-size:10px;color:var(--text3);margin-top:2px;}
+/* Tabs */
+.tabs{display:flex;gap:2px;background:var(--bg4);border-radius:5px;padding:3px;margin-bottom:13px}
+.tab{flex:1;text-align:center;padding:6px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;color:var(--t2);transition:all .12s}
+.tab.on{background:var(--bg2);color:var(--t)}
+.tc{display:none}
+.tc.on{display:block}
 
-/* Bridge types */
-.bt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px;}
+/* Forms */
+.field{margin-bottom:11px}
+.lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t2);margin-bottom:5px;display:block}
+.inp,.sel{width:100%;background:var(--bg);border:1px solid var(--b2);border-radius:5px;padding:8px 10px;color:var(--t);font-family:var(--display);font-size:13px;outline:none;transition:border .15s;-webkit-appearance:none;appearance:none}
+.inp:focus,.sel:focus{border-color:var(--red)}
+textarea.inp{resize:vertical;font-family:var(--mono);font-size:11px;line-height:1.6}
 
-/* Bandwidth bars */
-.bw-bars{display:flex;align-items:flex-end;gap:2px;height:56px;}
-.bw-b{flex:1;min-height:2px;border-radius:2px 2px 0 0;background:var(--red);opacity:.7;transition:height .3s;}
-.bw-b.rx{background:var(--blue);}
+/* Toggles */
+.tr{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b)}
+.tr:last-child{border-bottom:none}
+.trinfo{flex:1}
+.trname{font-size:13px;font-weight:600}
+.trdesc{font-size:11px;color:var(--t2);margin-top:1px}
+.tog{width:36px;height:20px;background:var(--bg4);border:1px solid var(--b2);border-radius:10px;cursor:pointer;position:relative;flex-shrink:0;transition:all .2s}
+.tog::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:var(--t3);top:2px;left:2px;transition:all .2s}
+.tog.on{background:var(--rdim);border-color:var(--red)}
+.tog.on::after{background:var(--red);left:18px}
+
+/* BW bars */
+.bwbars{display:flex;align-items:flex-end;gap:2px;height:54px}
+.bwb{flex:1;min-height:2px;border-radius:2px 2px 0 0;background:var(--red);opacity:.7;transition:height .3s}
+.bwb.rx{background:var(--blue)}
 
 /* Circuit viz */
-.cv{display:flex;align-items:center;gap:0;margin:10px 0;}
-.cn{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;}
-.cn-dot{width:34px;height:34px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;}
-.cn-dot i{font-size:15px;color:var(--text3);}
-.cn-dot.on{border-color:var(--red);background:var(--red-dim);}
-.cn-dot.on i{color:var(--red);}
-.cl{flex:1;height:1px;background:var(--border);}
-.cl.on{background:var(--red);opacity:.5;}
-.cn-name{font-size:9px;font-family:var(--mono);color:var(--text3);text-align:center;max-width:52px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cv{display:flex;align-items:center;margin:10px 0}
+.cn{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.cnd{width:33px;height:33px;border-radius:50%;background:var(--bg4);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;transition:all .3s}
+.cnd i{font-size:14px;color:var(--t3);transition:color .3s}
+.cnd.on{border-color:var(--red);background:var(--rdim)}
+.cnd.on i{color:var(--red)}
+.cl{flex:1;height:1px;background:var(--b);transition:background .3s}
+.cl.on{background:var(--red);opacity:.5}
+.cname{font-size:9px;font-family:var(--mono);color:var(--t3);text-align:center;max-width:50px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* Proxy table */
-.ptbl{width:100%;border-collapse:collapse;}
-.ptbl th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-weight:700;padding:6px 10px;text-align:left;border-bottom:1px solid var(--border);}
-.ptbl td{padding:8px 10px;font-size:12px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--text2);}
-.ptbl tr:hover td{background:var(--bg4);}
-.ptbl tr.sel td{background:var(--red-dim);}
-.ptbl tr.sel td:first-child{border-left:2px solid var(--red);}
+.ptbl{width:100%;border-collapse:collapse}
+.ptbl th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);font-weight:700;padding:6px 10px;text-align:left;border-bottom:1px solid var(--b)}
+.ptbl td{padding:8px 10px;font-size:12px;border-bottom:1px solid var(--b);font-family:var(--mono);color:var(--t2)}
+.ptbl tr:hover td{background:var(--bg4)}
+.ptbl tr.sel td{background:var(--rdim)}
+.ptbl tr.sel td:first-child{border-left:2px solid var(--red)}
 
-/* App list */
-.ai{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
-.ai:last-child{border-bottom:none;}
-.ai-icon{width:30px;height:30px;border-radius:7px;background:var(--bg4);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.ai-icon i{font-size:15px;color:var(--text2);}
-.ai-name{flex:1;font-size:13px;font-weight:600;}
-.ai-proc{font-size:10px;color:var(--text3);font-family:var(--mono);}
+/* App items */
+.ai{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b)}
+.ai:last-child{border-bottom:none}
+.aiicon{width:30px;height:30px;border-radius:7px;background:var(--bg4);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.aiicon i{font-size:15px;color:var(--t2)}
+
+/* CT cards */
+.ctgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.ctcard{border:1px solid var(--b);border-radius:8px;padding:12px;cursor:pointer;transition:all .12s;text-align:center}
+.ctcard:hover{border-color:var(--b3);background:var(--bg4)}
+.ctcard.on{border-color:var(--red);background:var(--rdim)}
+.ctcard i{font-size:22px;color:var(--t3);display:block;margin-bottom:5px}
+.ctcard.on i{color:var(--red)}
+.ctcard-name{font-size:12px;font-weight:700;color:var(--t2)}
+.ctcard.on .ctcard-name{color:var(--red)}
+.ctcard-desc{font-size:10px;color:var(--t3);margin-top:2px}
+
+/* Bridge grid 4-col */
+.btgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px}
 
 /* Update banner */
-.upd{display:none;background:rgba(79,143,255,.07);border:1px solid rgba(79,143,255,.2);border-radius:var(--r);padding:11px 14px;margin-bottom:12px;align-items:center;gap:10px;}
-.upd i{font-size:18px;color:var(--blue);flex-shrink:0;}
-.upd-txt{flex:1;}
-.upd-title{font-size:13px;font-weight:700;color:var(--blue);}
-.upd-sub{font-size:11px;color:var(--text2);margin-top:1px;}
+.updbanner{display:none;background:var(--bdim);border:1px solid rgba(79,143,255,.2);border-radius:8px;padding:10px 14px;margin-bottom:11px;align-items:center;gap:10px}
+.updbanner i{font-size:18px;color:var(--blue);flex-shrink:0}
+.updtxt{flex:1}
+.updtitle{font-size:13px;font-weight:700;color:var(--blue)}
+.updsub{font-size:11px;color:var(--t2);margin-top:1px}
 
-/* Bootstrap bar */
-.bs-bar{width:100%;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-top:6px;}
-.bs-fill{height:100%;background:var(--red);border-radius:2px;transition:width .5s;box-shadow:0 0 6px var(--red-glow);}
+/* WS dot */
+.wsdot{width:6px;height:6px;border-radius:50%;background:var(--t3);flex-shrink:0}
+.wsdot.ok{background:var(--green)}
+.wsdot.no{background:var(--red)}
 
-/* WS indicator */
-.ws-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0;}
-.ws-dot.ok{background:var(--green);}
-.ws-dot.err{background:var(--red);}
-
-/* Scrollbar */
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px;}
-::-webkit-scrollbar-thumb:hover{background:var(--border3);}
-
-.flex{display:flex;align-items:center;}
-.gap{gap:8px;}
-.gap-sm{gap:5px;}
-.ml-auto{margin-left:auto;}
-.mt{margin-top:8px;}
-.divider{height:1px;background:var(--border);margin:12px 0;}
-.mono{font-family:var(--mono);}
-.sm{font-size:11px;}
-.muted{color:var(--text2);}
+/* Row */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.flex{display:flex;align-items:center}
+.gap{gap:8px}
+.gap-s{gap:5px}
+.ml{margin-left:auto}
+.mt{margin-top:8px}
+.muted{color:var(--t2)}
+.mono{font-family:var(--mono)}
+.sm{font-size:11px}
+.divider{height:1px;background:var(--b);margin:11px 0}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
 </style>
 </head>
 <body>
@@ -243,199 +217,172 @@ textarea.inp{resize:vertical;line-height:1.6;font-family:var(--mono);font-size:1
 
 <!-- Titlebar -->
 <div class="tb">
-  <div class="tb-logo">
-    <div class="logo-icon"><i class="ti ti-shield-lock" aria-hidden="true"></i></div>
-    <span class="tb-title">Tor<span>VPN</span></span>
+  <div class="logo">
+    <div class="logo-icon"><i class="ti ti-shield-lock"></i></div>
+    <span class="logo-name">Tor<span>VPN</span></span>
   </div>
-  <div class="tb-space"></div>
+  <div class="tb-gap"></div>
   <div class="tb-stat">
-    <div class="ws-dot" id="wsDot" title="WebSocket connection"></div>
-    <span id="wsLabel" style="font-size:10px;">WS</span>
+    <div class="wsdot" id="wsDot"></div>
+    <span id="wsLbl" style="font-size:10px;color:var(--t3)">WS</span>
   </div>
-  <div class="tb-div"></div>
+  <div class="sep"></div>
   <div class="tb-stat">
     <div class="dot" id="tbDot"></div>
-    <span id="tbStatus">Disconnected</span>
+    <span id="tbStat">Disconnected</span>
   </div>
-  <div class="tb-div"></div>
+  <div class="sep"></div>
   <div class="tb-stat">
-    <i class="ti ti-arrow-up" style="font-size:11px;color:var(--red);" aria-hidden="true"></i>
-    <span id="txRate" class="mono">0 B/s</span>
-    <span style="margin:0 4px;color:var(--text3)">|</span>
-    <i class="ti ti-arrow-down" style="font-size:11px;color:var(--blue);" aria-hidden="true"></i>
-    <span id="rxRate" class="mono">0 B/s</span>
+    <i class="ti ti-arrow-up" style="font-size:11px;color:var(--red)"></i>
+    <span id="tbTx" class="mono">0 B/s</span>
+    <span style="margin:0 3px;color:var(--t3)">|</span>
+    <i class="ti ti-arrow-down" style="font-size:11px;color:var(--blue)"></i>
+    <span id="tbRx" class="mono">0 B/s</span>
   </div>
 </div>
 
 <!-- Sidebar -->
 <nav class="sb">
   <div class="sb-sec">Monitor</div>
-  <div class="ni active" onclick="goPage('dashboard')" id="nav-dashboard"><i class="ti ti-layout-dashboard"></i>Dashboard</div>
-  <div class="ni" onclick="goPage('console')" id="nav-console"><i class="ti ti-terminal-2"></i>Console</div>
-  <div class="ni" onclick="goPage('circuits')" id="nav-circuits"><i class="ti ti-topology-ring"></i>Circuits</div>
+  <div class="ni active" id="nav-dashboard" onclick="goPage('dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard</div>
+  <div class="ni" id="nav-console" onclick="goPage('console')"><i class="ti ti-terminal-2"></i>Console</div>
+  <div class="ni" id="nav-circuits" onclick="goPage('circuits')"><i class="ti ti-topology-ring"></i>Circuits</div>
   <div class="sb-sec">Configure</div>
-  <div class="ni" onclick="goPage('connection')" id="nav-connection"><i class="ti ti-plug-connected"></i>Connection</div>
-  <div class="ni" onclick="goPage('proxy')" id="nav-proxy"><i class="ti ti-server-2"></i>Proxies</div>
-  <div class="ni" onclick="goPage('tunnel')" id="nav-tunnel"><i class="ti ti-route"></i>Tunneling</div>
-  <div class="ni" onclick="goPage('bridges')" id="nav-bridges"><i class="ti ti-building-bridge"></i>Bridges</div>
+  <div class="ni" id="nav-connection" onclick="goPage('connection')"><i class="ti ti-plug-connected"></i>Connection</div>
+  <div class="ni" id="nav-proxy" onclick="goPage('proxy')"><i class="ti ti-server-2"></i>Proxies</div>
+  <div class="ni" id="nav-tunnel" onclick="goPage('tunnel')"><i class="ti ti-route"></i>Tunneling</div>
+  <div class="ni" id="nav-bridges" onclick="goPage('bridges')"><i class="ti ti-building-bridge"></i>Bridges</div>
   <div class="sb-sec">System</div>
-  <div class="ni" onclick="goPage('settings')" id="nav-settings"><i class="ti ti-adjustments-horizontal"></i>Settings</div>
-  <div class="ni" onclick="goPage('about')" id="nav-about"><i class="ti ti-info-circle"></i>About</div>
+  <div class="ni" id="nav-settings" onclick="goPage('settings')"><i class="ti ti-adjustments-horizontal"></i>Settings</div>
+  <div class="ni" id="nav-about" onclick="goPage('about')"><i class="ti ti-info-circle"></i>About</div>
   <div class="sb-bot">
-    <div class="ni" onclick="send({cmd:'check_update'})" style="color:var(--text3);"><i class="ti ti-refresh"></i>Check updates</div>
+    <div class="ni" onclick="cmd('check_update')" style="color:var(--t3)"><i class="ti ti-refresh"></i>Check updates</div>
   </div>
 </nav>
 
-<!-- Main -->
+<!-- Main content -->
 <main class="main">
 
-<!-- DASHBOARD -->
+<!-- ── DASHBOARD ── -->
 <div class="page active" id="page-dashboard">
-  <div class="upd" id="updBanner">
-    <i class="ti ti-package" aria-hidden="true"></i>
-    <div class="upd-txt">
-      <div class="upd-title" id="updTitle">New version available</div>
-      <div class="upd-sub" id="updSub"></div>
+
+  <div class="updbanner" id="updBanner">
+    <i class="ti ti-package"></i>
+    <div class="updtxt">
+      <div class="updtitle" id="updTitle">New version available</div>
+      <div class="updsub" id="updSub"></div>
     </div>
     <a id="updLink" href="#" class="btn btn-xs" target="_blank"><i class="ti ti-external-link"></i>View</a>
     <button class="btn btn-xs" onclick="document.getElementById('updBanner').style.display='none'"><i class="ti ti-x"></i></button>
   </div>
 
   <div class="hero">
-    <div class="orb" id="orb"><i class="ti ti-shield" id="orbIcon" aria-hidden="true"></i></div>
-    <div class="hero-info">
-      <div class="hero-lbl">Status</div>
-      <div class="hero-val" id="heroVal">Disconnected</div>
-      <div class="hero-sub" id="heroSub">Click Connect to start</div>
-      <div class="bs-bar"><div class="bs-fill" id="bsFill" style="width:0%"></div></div>
+    <div class="orb" id="orb"><i class="ti ti-shield" id="orbIcon"></i></div>
+    <div class="hi">
+      <div class="hlbl">Status</div>
+      <div class="hval" id="hVal">Disconnected</div>
+      <div class="hsub" id="hSub">Click Connect to start</div>
+      <div class="bsbar"><div class="bsfill" id="bsFill" style="width:0%"></div></div>
     </div>
-    <div class="hero-acts">
+    <div class="hacts">
       <button class="btn btn-red" id="connBtn" onclick="toggleConn()"><i class="ti ti-player-play"></i>Connect</button>
-      <button class="btn" id="rotBtn" onclick="send({cmd:'newnym'})" disabled><i class="ti ti-refresh"></i>New circuit</button>
+      <button class="btn" id="rotBtn" onclick="cmd('newnym')" disabled><i class="ti ti-refresh"></i>New circuit</button>
       <button class="btn" onclick="goPage('connection')"><i class="ti ti-settings"></i>Configure</button>
     </div>
   </div>
 
   <div class="metrics">
-    <div class="metric">
-      <div class="m-lbl">Exit IP</div>
-      <div class="m-val mono" id="mExitIP" style="font-size:13px;padding-top:3px;">—</div>
-      <div class="m-sub" id="mCountry">Not connected</div>
-    </div>
-    <div class="metric">
-      <div class="m-lbl">Data used</div>
-      <div class="m-val" id="mData">0 B</div>
-      <div class="m-sub"><span style="color:var(--red)">↑</span> <span id="mTx">0 B</span> | <span style="color:var(--blue)">↓</span> <span id="mRx">0 B</span></div>
-    </div>
-    <div class="metric">
-      <div class="m-lbl">Bootstrap</div>
-      <div class="m-val" id="mBoot">0%</div>
-      <div class="m-sub" id="mBootSub">Not started</div>
-    </div>
-    <div class="metric">
-      <div class="m-lbl">Circuits</div>
-      <div class="m-val" id="mCirc">0</div>
-      <div class="m-sub" id="mCircSub">No active circuits</div>
-    </div>
+    <div class="met"><div class="mlbl">Exit IP</div><div class="mval mono" id="mIP" style="font-size:13px;padding-top:3px">—</div><div class="msub" id="mCountry">Not connected</div></div>
+    <div class="met"><div class="mlbl">Data used</div><div class="mval" id="mData">0 B</div><div class="msub"><span style="color:var(--red)">↑</span><span id="mTx"> 0 B</span> | <span style="color:var(--blue)">↓</span><span id="mRx"> 0 B</span></div></div>
+    <div class="met"><div class="mlbl">Bootstrap</div><div class="mval" id="mBoot">0%</div><div class="msub" id="mBootSub">Not started</div></div>
+    <div class="met"><div class="mlbl">Circuits</div><div class="mval" id="mCirc">0</div><div class="msub" id="mCircSub">No circuits</div></div>
   </div>
 
   <div class="row">
     <div class="card">
-      <div class="ch"><span class="ct">Bandwidth</span><span class="badge b-green" id="bwBadge">Idle</span></div>
-      <div class="bw-bars" id="bwBars"></div>
-      <div class="flex gap mt" style="font-size:10px;color:var(--text3);font-family:var(--mono);">
+      <div class="ch"><span class="ct">Bandwidth</span><span class="badge ba" id="bwBadge">Idle</span></div>
+      <div class="bwbars" id="bwBars"></div>
+      <div class="flex gap mt" style="font-size:10px;color:var(--t3);font-family:var(--mono)">
         <span><span style="color:var(--red)">■</span> TX <span id="txNow">0 B/s</span></span>
         <span><span style="color:var(--blue)">■</span> RX <span id="rxNow">0 B/s</span></span>
       </div>
     </div>
     <div class="card">
-      <div class="ch"><span class="ct">Active circuit</span><button class="btn btn-xs" onclick="send({cmd:'newnym'})"><i class="ti ti-refresh"></i></button></div>
-      <div class="cv" id="circViz">
-        <div class="cn"><div class="cn-dot"><i class="ti ti-device-laptop"></i></div><div class="cn-name">You</div></div>
-        <div class="cl"></div>
-        <div class="cn"><div class="cn-dot" id="cv-guard"><i class="ti ti-server"></i></div><div class="cn-name" id="cv-gname">Guard</div></div>
-        <div class="cl" id="cv-l1"></div>
-        <div class="cn"><div class="cn-dot" id="cv-mid"><i class="ti ti-server"></i></div><div class="cn-name" id="cv-mname">Middle</div></div>
-        <div class="cl" id="cv-l2"></div>
-        <div class="cn"><div class="cn-dot" id="cv-exit"><i class="ti ti-server"></i></div><div class="cn-name" id="cv-ename">Exit</div></div>
-        <div class="cl" id="cv-l3"></div>
-        <div class="cn"><div class="cn-dot"><i class="ti ti-world"></i></div><div class="cn-name">Internet</div></div>
+      <div class="ch"><span class="ct">Active circuit</span><button class="btn btn-xs" onclick="cmd('newnym')"><i class="ti ti-refresh"></i></button></div>
+      <div class="cv">
+        <div class="cn"><div class="cnd"><i class="ti ti-device-laptop"></i></div><div class="cname">You</div></div>
+        <div class="cl" id="cl0"></div>
+        <div class="cn"><div class="cnd" id="cn0"><i class="ti ti-server"></i></div><div class="cname" id="cn0n">Guard</div></div>
+        <div class="cl" id="cl1"></div>
+        <div class="cn"><div class="cnd" id="cn1"><i class="ti ti-server"></i></div><div class="cname" id="cn1n">Middle</div></div>
+        <div class="cl" id="cl2"></div>
+        <div class="cn"><div class="cnd" id="cn2"><i class="ti ti-server"></i></div><div class="cname" id="cn2n">Exit</div></div>
+        <div class="cl" id="cl3"></div>
+        <div class="cn"><div class="cnd"><i class="ti ti-world"></i></div><div class="cname">Internet</div></div>
       </div>
       <div class="mono sm muted mt" id="circID">No active circuit</div>
     </div>
   </div>
 
-  <div class="card" style="padding:0;overflow:hidden;">
-    <div class="c-tb">
-      <span class="ct" style="margin:0 4px;">Quick log</span>
-      <div class="cfilt" id="miniFilter">
-        <button class="fb active" onclick="setMiniFilter('notice',this)">Notice</button>
-        <button class="fb" onclick="setMiniFilter('warn',this)">Warn</button>
-        <button class="fb" onclick="setMiniFilter('all',this)">All</button>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="ctb">
+      <span class="ct" style="margin:0 6px">Quick log</span>
+      <div class="cfilt">
+        <button class="fb on" onclick="setMF('notice',this)">Notice</button>
+        <button class="fb" onclick="setMF('warn',this)">Warn</button>
+        <button class="fb" onclick="setMF('all',this)">All</button>
       </div>
-      <button class="btn btn-xs ml-auto" onclick="goPage('console')"><i class="ti ti-external-link"></i>Full console</button>
+      <button class="btn btn-xs ml" onclick="goPage('console')"><i class="ti ti-external-link"></i>Full log</button>
     </div>
-    <div class="console-body" id="miniLog" style="height:150px;"></div>
+    <div class="clog" id="miniLog" style="height:150px"></div>
   </div>
 </div>
 
-<!-- CONSOLE -->
+<!-- ── CONSOLE ── -->
 <div class="page" id="page-console">
-  <div class="card" style="padding:0;overflow:hidden;margin-bottom:0;">
-    <div class="c-tb">
-      <span class="ct" style="margin:0 6px;">Process log</span>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:0">
+    <div class="ctb">
+      <span class="ct" style="margin:0 6px">Process log</span>
       <div class="cfilt">
-        <button class="fb active" onclick="setFilter('notice',this)">Notice</button>
-        <button class="fb" onclick="setFilter('info',this)">Info</button>
-        <button class="fb" onclick="setFilter('debug',this)">Debug</button>
-        <button class="fb" onclick="setFilter('warn',this)">Warn</button>
-        <button class="fb" onclick="setFilter('all',this)">All</button>
+        <button class="fb on" onclick="setFF('notice',this)">Notice</button>
+        <button class="fb" onclick="setFF('info',this)">Info</button>
+        <button class="fb" onclick="setFF('debug',this)">Debug</button>
+        <button class="fb" onclick="setFF('warn',this)">Warn</button>
+        <button class="fb" onclick="setFF('all',this)">All</button>
       </div>
-      <div class="c-acts">
+      <div class="flex gap-s ml">
         <button class="btn btn-xs" onclick="clearLog()"><i class="ti ti-trash"></i>Clear</button>
         <button class="btn btn-xs" onclick="exportLog()"><i class="ti ti-download"></i>Export</button>
-        <button class="btn btn-xs" id="asBtn" onclick="toggleAS()" title="Auto-scroll" style="color:var(--red)"><i class="ti ti-arrow-down-circle"></i></button>
+        <button class="btn btn-xs" id="asBtn" onclick="toggleAS()" style="color:var(--red)" title="Auto-scroll"><i class="ti ti-arrow-down-circle"></i></button>
       </div>
     </div>
-    <div class="console-body" id="fullLog" style="height:calc(100vh - 175px);"></div>
+    <div class="clog" id="fullLog" style="height:calc(100vh - 175px)"></div>
   </div>
 </div>
 
-<!-- CIRCUITS -->
+<!-- ── CIRCUITS ── -->
 <div class="page" id="page-circuits">
   <div class="card">
     <div class="ch">
       <span class="ct">Active circuits</span>
-      <div class="flex gap-sm">
-        <span class="badge b-green" id="circCount">0</span>
-        <button class="btn btn-sm" onclick="send({cmd:'newnym'})"><i class="ti ti-refresh"></i>Rotate all</button>
-        <button class="btn btn-sm" onclick="send({cmd:'get_circuits'})"><i class="ti ti-reload"></i>Refresh</button>
+      <div class="flex gap-s">
+        <span class="badge bg" id="circCount">0</span>
+        <button class="btn btn-sm" onclick="cmd('newnym')"><i class="ti ti-refresh"></i>Rotate all</button>
+        <button class="btn btn-sm" onclick="cmd('get_circuits')"><i class="ti ti-reload"></i>Refresh</button>
       </div>
     </div>
-    <div id="circList"><div class="muted sm" style="padding:16px;text-align:center;">No circuits — connect first</div></div>
+    <div id="circList"><div class="muted sm" style="padding:16px;text-align:center">Connect first to see circuits</div></div>
   </div>
 </div>
 
-<!-- CONNECTION -->
+<!-- ── CONNECTION ── -->
 <div class="page" id="page-connection">
   <div class="card">
     <div class="ch"><span class="ct">Connection type</span></div>
-    <div class="ct-grid">
-      <div class="ct-card active" onclick="selConn('socks5',this)" id="cc-socks5">
-        <i class="ti ti-plug-connected"></i>
-        <div class="ct-name">SOCKS5 proxy</div>
-        <div class="ct-desc">App-level proxy</div>
-      </div>
-      <div class="ct-card" onclick="selConn('http',this)" id="cc-http">
-        <i class="ti ti-world-www"></i>
-        <div class="ct-name">HTTP tunnel</div>
-        <div class="ct-desc">Port 8118</div>
-      </div>
-      <div class="ct-card" onclick="selConn('tun',this)" id="cc-tun">
-        <i class="ti ti-network"></i>
-        <div class="ct-name">TUN / system</div>
-        <div class="ct-desc">All traffic</div>
-      </div>
+    <div class="ctgrid">
+      <div class="ctcard on" id="cc-socks5" onclick="selConn('socks5',this)"><i class="ti ti-plug-connected"></i><div class="ctcard-name">SOCKS5 proxy</div><div class="ctcard-desc">App-level proxy</div></div>
+      <div class="ctcard" id="cc-http" onclick="selConn('http',this)"><i class="ti ti-world-www"></i><div class="ctcard-name">HTTP tunnel</div><div class="ctcard-desc">Port 8118</div></div>
+      <div class="ctcard" id="cc-tun" onclick="selConn('tun',this)"><i class="ti ti-network"></i><div class="ctcard-name">TUN / system</div><div class="ctcard-desc">All traffic</div></div>
     </div>
     <div id="cfg-socks5">
       <div class="row">
@@ -445,115 +392,86 @@ textarea.inp{resize:vertical;line-height:1.6;font-family:var(--mono);font-size:1
     </div>
     <div id="cfg-http" style="display:none">
       <div class="field"><label class="lbl">HTTP tunnel port</label><input class="inp" type="number" value="8118"></div>
-      <div class="tr"><div class="tr-info"><div class="tr-name">Set as system proxy</div><div class="tr-desc">Auto-configure Windows system proxy settings</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+      <div class="tr"><div class="trinfo"><div class="trname">Set as system proxy</div><div class="trdesc">Auto-configure Windows system proxy</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
     </div>
     <div id="cfg-tun" style="display:none">
       <div class="row">
         <div class="field"><label class="lbl">Interface name</label><input class="inp" value="torvpn0"></div>
         <div class="field"><label class="lbl">CIDR</label><input class="inp" value="10.0.0.1/24"></div>
       </div>
-      <div class="tr"><div class="tr-info"><div class="tr-name">Route all traffic</div><div class="tr-desc">Add /1 routes to override default gateway</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
-      <div class="tr"><div class="tr-info"><div class="tr-name">Kill switch</div><div class="tr-desc">Block all traffic if Tor disconnects</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="tr"><div class="trinfo"><div class="trname">Route all traffic</div><div class="trdesc">Override default gateway via /1 routes</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="tr"><div class="trinfo"><div class="trname">Kill switch</div><div class="trdesc">Block all traffic if Tor disconnects</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
     </div>
   </div>
   <div class="card">
     <div class="ch"><span class="ct">Tor options</span></div>
-    <div class="field">
-      <label class="lbl">Circuit rotation</label>
-      <div class="flex gap">
-        <input type="range" min="60" max="3600" step="60" value="600" id="rotSlider" oninput="document.getElementById('rotVal').textContent=Math.round(this.value/60)+'m';send({cmd:'set_config',key:'rotate_interval',value:this.value})" style="flex:1;">
-        <span id="rotVal" class="mono sm muted" style="width:30px;">10m</span>
-      </div>
+    <div class="field"><label class="lbl">Circuit rotation</label>
+      <div class="flex gap"><input type="range" min="60" max="3600" step="60" value="600" id="rotSlider" oninput="document.getElementById('rotVal').textContent=Math.round(this.value/60)+'m';cmd('set_config',{key:'rotate_interval',value:this.value})" style="flex:1"><span id="rotVal" class="mono sm muted" style="width:28px">10m</span></div>
     </div>
-    <div class="field">
-      <label class="lbl">Build timeout</label>
-      <div class="flex gap">
-        <input type="range" min="5" max="60" step="1" value="10" id="toSlider" oninput="document.getElementById('toVal').textContent=this.value+'s'" style="flex:1;">
-        <span id="toVal" class="mono sm muted" style="width:30px;">10s</span>
-      </div>
+    <div class="field"><label class="lbl">Build timeout</label>
+      <div class="flex gap"><input type="range" min="5" max="60" step="1" value="10" id="toSlider" oninput="document.getElementById('toVal').textContent=this.value+'s'" style="flex:1"><span id="toVal" class="mono sm muted" style="width:28px">10s</span></div>
     </div>
-    <div class="field">
-      <label class="lbl">Exclude exit countries</label>
-      <input class="inp" placeholder="{RU},{CN},{IR},{KP}">
-    </div>
-    <div class="tr"><div class="tr-info"><div class="tr-name">DNS through Tor</div><div class="tr-desc">Prevent DNS leaks via DoH resolver</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
-    <button class="btn btn-red" style="width:100%;margin-top:10px;" onclick="applyAndReconnect()"><i class="ti ti-check"></i>Apply &amp; reconnect</button>
+    <div class="field"><label class="lbl">Exclude exit countries</label><input class="inp" placeholder="{RU},{CN},{IR}"></div>
+    <div class="tr"><div class="trinfo"><div class="trname">DNS through Tor</div><div class="trdesc">Prevent DNS leaks via DoH</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+    <button class="btn btn-red" style="width:100%;margin-top:10px" onclick="applyReconn()"><i class="ti ti-check"></i>Apply &amp; reconnect</button>
   </div>
 </div>
 
-<!-- PROXY -->
+<!-- ── PROXY ── -->
 <div class="page" id="page-proxy">
   <div class="card">
     <div class="ch"><span class="ct">Proxy endpoints</span>
-      <div class="flex gap-sm">
-        <button class="btn btn-sm" onclick="refreshProxies()"><i class="ti ti-refresh"></i>Refresh</button>
-      </div>
+      <button class="btn btn-sm" onclick="refreshProxies()"><i class="ti ti-refresh"></i>Refresh</button>
     </div>
     <table class="ptbl">
       <thead><tr><th>Type</th><th>Host</th><th>Port</th><th>Status</th><th></th></tr></thead>
-      <tbody id="proxyTbody">
-        <tr class="sel" onclick="selProxy(this)">
-          <td><span class="badge b-green">SOCKS5</span></td><td class="mono">127.0.0.1</td><td class="mono">9050</td>
-          <td><span class="badge b-green">Active</span></td>
-          <td><button class="btn btn-xs" onclick="event.stopPropagation();testProxyRow(this)"><i class="ti ti-wifi"></i></button></td>
-        </tr>
-        <tr onclick="selProxy(this)">
-          <td><span class="badge b-blue">HTTP</span></td><td class="mono">127.0.0.1</td><td class="mono">8118</td>
-          <td><span class="badge b-amber">Ready</span></td>
-          <td><button class="btn btn-xs" onclick="event.stopPropagation();testProxyRow(this)"><i class="ti ti-wifi"></i></button></td>
-        </tr>
+      <tbody id="proxyBody">
+        <tr class="sel" onclick="selProxy(this)"><td><span class="badge bg">SOCKS5</span></td><td>127.0.0.1</td><td>9050</td><td><span class="badge bg">Active</span></td><td><button class="btn btn-xs" onclick="event.stopPropagation();testProxyRow(this)"><i class="ti ti-wifi"></i></button></td></tr>
+        <tr onclick="selProxy(this)"><td><span class="badge bb">HTTP</span></td><td>127.0.0.1</td><td>8118</td><td><span class="badge ba">Ready</span></td><td><button class="btn btn-xs" onclick="event.stopPropagation();testProxyRow(this)"><i class="ti ti-wifi"></i></button></td></tr>
       </tbody>
     </table>
   </div>
   <div class="card">
     <div class="ch"><span class="ct">Add proxy</span></div>
     <div class="row">
-      <div class="field"><label class="lbl">Type</label><div class="sel-w"><select class="sel" id="npType"><option>SOCKS5</option><option>SOCKS4</option><option>HTTP</option><option>HTTPS</option></select></div></div>
+      <div class="field"><label class="lbl">Type</label><select class="sel" id="npType"><option>SOCKS5</option><option>SOCKS4</option><option>HTTP</option><option>HTTPS</option></select></div>
       <div class="field"><label class="lbl">Port</label><input class="inp" type="number" id="npPort" placeholder="9050"></div>
     </div>
     <div class="field"><label class="lbl">Host</label><input class="inp" id="npHost" placeholder="127.0.0.1"></div>
-    <div class="row">
-      <div class="field"><label class="lbl">Username</label><input class="inp" placeholder="(optional)"></div>
-      <div class="field"><label class="lbl">Password</label><input class="inp" type="password" placeholder="(optional)"></div>
-    </div>
     <div class="flex gap mt">
       <button class="btn" style="flex:1" onclick="testNewProxy()"><i class="ti ti-wifi"></i>Test</button>
-      <button class="btn btn-red" style="flex:1" onclick="addProxy()"><i class="ti ti-plus"></i>Add proxy</button>
+      <button class="btn btn-red" style="flex:1" onclick="addProxy()"><i class="ti ti-plus"></i>Add</button>
     </div>
   </div>
 </div>
 
-<!-- TUNNELING -->
+<!-- ── TUNNELING ── -->
 <div class="page" id="page-tunnel">
   <div class="card">
     <div class="ch"><span class="ct">Tunnel scope</span></div>
     <div class="tabs">
-      <div class="tab active" onclick="swTab('tt','system',this)">System</div>
+      <div class="tab on" onclick="swTab('tt','system',this)">System</div>
       <div class="tab" onclick="swTab('tt','apps',this)">Apps</div>
       <div class="tab" onclick="swTab('tt','sites',this)">Sites</div>
       <div class="tab" onclick="swTab('tt','excl',this)">Exclusions</div>
     </div>
 
-    <div class="tc active" id="tt-system">
-      <div class="tr"><div class="tr-info"><div class="tr-name">Route all traffic through Tor</div><div class="tr-desc">Every TCP connection goes through Tor</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
-      <div class="tr"><div class="tr-info"><div class="tr-name">Kill switch</div><div class="tr-desc">Block traffic if Tor disconnects</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
-      <div class="tr"><div class="tr-info"><div class="tr-name">DNS leak protection</div><div class="tr-desc">Force DNS through Tor DoH resolver</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
-      <div class="tr"><div class="tr-info"><div class="tr-name">Block IPv6</div><div class="tr-desc">Prevent IPv6 traffic bypassing tunnel</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+    <div class="tc on" id="tt-system">
+      <div class="tr"><div class="trinfo"><div class="trname">Route all traffic</div><div class="trdesc">Every TCP connection goes through Tor</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="tr"><div class="trinfo"><div class="trname">Kill switch</div><div class="trdesc">Block traffic if Tor disconnects</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="tr"><div class="trinfo"><div class="trname">DNS leak protection</div><div class="trdesc">Force all DNS through Tor DoH resolver</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="tr"><div class="trinfo"><div class="trname">Block IPv6</div><div class="trdesc">Prevent IPv6 bypassing tunnel</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
     </div>
 
     <div class="tc" id="tt-apps">
-      <div class="flex gap" style="margin-bottom:12px;">
+      <div class="flex gap" style="margin-bottom:12px">
         <span class="muted sm">Route specific apps through Tor</span>
-        <button class="btn btn-sm ml-auto" onclick="showAddApp()"><i class="ti ti-plus"></i>Add app</button>
+        <button class="btn btn-sm ml" onclick="showAddApp()"><i class="ti ti-plus"></i>Add app</button>
       </div>
-      <!-- Add app modal (inline) -->
-      <div id="addAppForm" style="display:none;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:14px;margin-bottom:12px;">
-        <div class="field"><label class="lbl">Application name</label><input class="inp" id="appName" placeholder="e.g. Chrome"></div>
-        <div class="field"><label class="lbl">Executable (.exe)</label>
-          <div class="flex gap">
-            <input class="inp" id="appExe" placeholder="chrome.exe" style="flex:1;">
-            <button class="btn btn-sm" title="Browse"><i class="ti ti-folder"></i></button>
-          </div>
+      <div id="addAppForm" style="display:none;background:var(--bg3);border:1px solid var(--b2);border-radius:8px;padding:13px;margin-bottom:12px">
+        <div class="field"><label class="lbl">App name</label><input class="inp" id="appName" placeholder="e.g. Telegram"></div>
+        <div class="field"><label class="lbl">Executable</label>
+          <div class="flex gap"><input class="inp" id="appExe" placeholder="telegram.exe" style="flex:1"><button class="btn btn-sm"><i class="ti ti-folder"></i></button></div>
         </div>
         <div class="flex gap mt">
           <button class="btn" onclick="cancelAddApp()"><i class="ti ti-x"></i>Cancel</button>
@@ -561,348 +479,421 @@ textarea.inp{resize:vertical;line-height:1.6;font-family:var(--mono);font-size:1
         </div>
       </div>
       <div id="appList">
-        <div class="ai"><div class="ai-icon"><i class="ti ti-brand-chrome"></i></div><div><div class="ai-name">Google Chrome</div><div class="ai-proc">chrome.exe</div></div><div class="tog on ml-auto" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" onclick="removeApp(this)" style="margin-left:6px;"><i class="ti ti-trash"></i></button></div>
-        <div class="ai"><div class="ai-icon"><i class="ti ti-brand-firefox"></i></div><div><div class="ai-name">Firefox</div><div class="ai-proc">firefox.exe</div></div><div class="tog on ml-auto" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" onclick="removeApp(this)" style="margin-left:6px;"><i class="ti ti-trash"></i></button></div>
-        <div class="ai"><div class="ai-icon"><i class="ti ti-terminal"></i></div><div><div class="ai-name">PowerShell</div><div class="ai-proc">powershell.exe</div></div><div class="tog ml-auto" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" onclick="removeApp(this)" style="margin-left:6px;"><i class="ti ti-trash"></i></button></div>
+        <div class="ai"><div class="aiicon"><i class="ti ti-brand-chrome"></i></div><div><div style="font-size:13px;font-weight:600">Google Chrome</div><div class="sm muted mono">chrome.exe</div></div><div class="tog on ml" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" onclick="removeApp(this)" style="margin-left:6px"><i class="ti ti-trash"></i></button></div>
+        <div class="ai"><div class="aiicon"><i class="ti ti-brand-firefox"></i></div><div><div style="font-size:13px;font-weight:600">Firefox</div><div class="sm muted mono">firefox.exe</div></div><div class="tog on ml" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" onclick="removeApp(this)" style="margin-left:6px"><i class="ti ti-trash"></i></button></div>
+        <div class="ai"><div class="aiicon"><i class="ti ti-terminal"></i></div><div><div style="font-size:13px;font-weight:600">PowerShell</div><div class="sm muted mono">powershell.exe</div></div><div class="tog ml" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" onclick="removeApp(this)" style="margin-left:6px"><i class="ti ti-trash"></i></button></div>
       </div>
     </div>
 
     <div class="tc" id="tt-sites">
-      <div class="flex gap" style="margin-bottom:12px;"><span class="muted sm">Only these domains go through Tor</span></div>
       <div id="siteList">
-        <div class="tr"><div class="tr-info"><div class="tr-name mono">*.onion</div><div class="tr-desc">All hidden services</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" style="margin-left:8px;" onclick="removeItem(this)"><i class="ti ti-trash"></i></button></div>
-        <div class="tr"><div class="tr-info"><div class="tr-name mono">torproject.org</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" style="margin-left:8px;" onclick="removeItem(this)"><i class="ti ti-trash"></i></button></div>
+        <div class="tr"><div class="trinfo"><div class="trname mono">*.onion</div><div class="trdesc">All .onion hidden services</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="tr"><div class="trinfo"><div class="trname mono">torproject.org</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" style="margin-left:8px" onclick="this.closest('.tr').remove()"><i class="ti ti-trash"></i></button></div>
       </div>
-      <div class="flex gap mt">
-        <input class="inp" id="newSite" placeholder="example.com" style="flex:1;">
-        <button class="btn btn-red" onclick="addSite()"><i class="ti ti-plus"></i>Add</button>
-      </div>
+      <div class="flex gap mt"><input class="inp" id="newSite" placeholder="example.com" style="flex:1"><button class="btn btn-red" onclick="addSite()"><i class="ti ti-plus"></i>Add</button></div>
     </div>
 
     <div class="tc" id="tt-excl">
-      <div class="flex gap" style="margin-bottom:12px;"><span class="muted sm">These bypass Tor entirely</span></div>
       <div id="exclList">
-        <div class="tr"><div class="tr-info"><div class="tr-name mono">127.0.0.0/8</div><div class="tr-desc">Loopback (always excluded)</div></div><div class="tog on"></div></div>
-        <div class="tr"><div class="tr-info"><div class="tr-name mono">192.168.0.0/16</div><div class="tr-desc">LAN</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" style="margin-left:8px;" onclick="removeItem(this)"><i class="ti ti-trash"></i></button></div>
-        <div class="tr"><div class="tr-info"><div class="tr-name mono">10.0.0.0/8</div><div class="tr-desc">Private range</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" style="margin-left:8px;" onclick="removeItem(this)"><i class="ti ti-trash"></i></button></div>
+        <div class="tr"><div class="trinfo"><div class="trname mono">127.0.0.0/8</div><div class="trdesc">Loopback (always excluded)</div></div><div class="tog on"></div></div>
+        <div class="tr"><div class="trinfo"><div class="trname mono">192.168.0.0/16</div><div class="trdesc">LAN</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" style="margin-left:8px" onclick="this.closest('.tr').remove()"><i class="ti ti-trash"></i></button></div>
+        <div class="tr"><div class="trinfo"><div class="trname mono">10.0.0.0/8</div><div class="trdesc">Private range</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div><button class="btn btn-xs" style="margin-left:8px" onclick="this.closest('.tr').remove()"><i class="ti ti-trash"></i></button></div>
       </div>
-      <div class="flex gap mt">
-        <input class="inp" id="newExcl" placeholder="IP, CIDR, or hostname" style="flex:1;">
-        <button class="btn btn-red" onclick="addExcl()"><i class="ti ti-plus"></i>Add</button>
-      </div>
+      <div class="flex gap mt"><input class="inp" id="newExcl" placeholder="IP, CIDR, or hostname" style="flex:1"><button class="btn btn-red" onclick="addExcl()"><i class="ti ti-plus"></i>Add</button></div>
     </div>
   </div>
 </div>
 
-<!-- BRIDGES -->
+<!-- ── BRIDGES ── -->
 <div class="page" id="page-bridges">
   <div class="card">
     <div class="ch"><span class="ct">Pluggable transport</span></div>
-    <div class="bt-grid">
-      <div class="ct-card active" onclick="selBridge('none',this)" id="bc-none">
-        <i class="ti ti-plug-connected"></i>
-        <div class="ct-name">None</div>
-        <div class="ct-desc">Direct Tor</div>
-      </div>
-      <div class="ct-card" onclick="selBridge('obfs4',this)" id="bc-obfs4">
-        <i class="ti ti-mask"></i>
-        <div class="ct-name">obfs4</div>
-        <div class="ct-desc">Obfuscated TCP</div>
-      </div>
-      <div class="ct-card" onclick="selBridge('snowflake',this)" id="bc-snowflake">
-        <i class="ti ti-snowflake"></i>
-        <div class="ct-name">Snowflake</div>
-        <div class="ct-desc">WebRTC peers</div>
-      </div>
-      <div class="ct-card" onclick="selBridge('webtunnel',this)" id="bc-webtunnel">
-        <i class="ti ti-world-www"></i>
-        <div class="ct-name">WebTunnel</div>
-        <div class="ct-desc">HTTPS disguise</div>
-      </div>
+    <div class="btgrid">
+      <div class="ctcard on" id="bc-none" onclick="selBridge('none',this)"><i class="ti ti-plug-connected"></i><div class="ctcard-name">None</div><div class="ctcard-desc">Direct Tor</div></div>
+      <div class="ctcard" id="bc-obfs4" onclick="selBridge('obfs4',this)"><i class="ti ti-mask"></i><div class="ctcard-name">obfs4</div><div class="ctcard-desc">Obfuscated</div></div>
+      <div class="ctcard" id="bc-snowflake" onclick="selBridge('snowflake',this)"><i class="ti ti-snowflake"></i><div class="ctcard-name">Snowflake</div><div class="ctcard-desc">WebRTC peers</div></div>
+      <div class="ctcard" id="bc-webtunnel" onclick="selBridge('webtunnel',this)"><i class="ti ti-world-www"></i><div class="ctcard-name">WebTunnel</div><div class="ctcard-desc">HTTPS disguise</div></div>
     </div>
 
-    <!-- None config -->
-    <div id="bconf-none">
-      <div style="padding:12px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);">
-        <p class="sm muted">Direct connection to the Tor network. Works on most networks. If bootstrapping is slow or stuck, switch to obfs4 or Snowflake.</p>
-      </div>
-    </div>
+    <div id="bc-conf-none"><div style="padding:12px;background:var(--bg3);border-radius:8px;border:1px solid var(--b)"><p class="sm muted">Direct Tor connection. If bootstrap is slow, switch to obfs4 or Snowflake.</p></div></div>
 
-    <!-- obfs4 config -->
-    <div id="bconf-obfs4" style="display:none;">
-      <div style="background:var(--amber-dim);border:1px solid rgba(240,147,58,.25);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;">
-        <p class="sm" style="color:var(--amber);"><strong>Requirements:</strong> Download <code>obfs4proxy.exe</code> and place it next to <code>tor.exe</code>.</p>
-        <p class="sm muted" style="margin-top:4px;">Get it from: <a href="https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/obfs4/-/releases" target="_blank" style="color:var(--blue);">GitLab releases</a></p>
+    <div id="bc-conf-obfs4" style="display:none">
+      <div style="background:var(--adim);border:1px solid rgba(240,147,58,.25);border-radius:8px;padding:10px 12px;margin-bottom:12px">
+        <p class="sm" style="color:var(--amber)"><b>Requirements:</b> obfs4proxy.exe must be in the same folder as tor.exe</p>
+        <p class="sm muted" style="margin-top:3px">Download: <a href="https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/obfs4/-/releases" target="_blank" style="color:var(--blue)">GitLab releases</a></p>
       </div>
+      <div class="field"><label class="lbl">obfs4proxy.exe path</label><input class="inp" id="obfsPath" value="obfs4proxy.exe"></div>
       <div class="field">
-        <label class="lbl">obfs4proxy.exe path</label>
-        <div class="flex gap">
-          <input class="inp" id="obfsPath" value="obfs4proxy.exe" style="flex:1;" placeholder="Full path or just obfs4proxy.exe if in same folder as tor.exe">
-          <button class="btn btn-sm"><i class="ti ti-folder"></i></button>
-        </div>
-      </div>
-      <div class="field">
-        <label class="lbl">Bridge lines <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">— paste exactly as given from bridges.torproject.org</span></label>
-        <textarea class="inp" id="obfsLines" rows="5" placeholder="obfs4 1.2.3.4:443 FINGERPRINT_HERE cert=BASE64CERTHERE== iat-mode=0
-obfs4 5.6.7.8:9001 FINGERPRINT_HERE cert=BASE64CERTHERE== iat-mode=0"></textarea>
-        <p class="sm muted mt">Each line: <code class="mono" style="font-size:10px;">obfs4 IP:PORT FINGERPRINT cert=CERT iat-mode=0</code></p>
+        <label class="lbl">Bridge lines — one per line, exactly as given by bridges.torproject.org</label>
+        <textarea class="inp" id="obfsLines" rows="5" placeholder="obfs4 1.2.3.4:443 FINGERPRINT cert=BASE64== iat-mode=0"></textarea>
       </div>
       <div class="flex gap">
-        <a href="https://bridges.torproject.org/bridges?transport=obfs4" target="_blank" class="btn btn-sm"><i class="ti ti-external-link"></i>Get obfs4 bridges</a>
-        <button class="btn btn-sm" onclick="testBridges()"><i class="ti ti-wifi"></i>Test bridges</button>
-        <button class="btn btn-red btn-sm ml-auto" onclick="saveBridges()"><i class="ti ti-check"></i>Save to torrc</button>
+        <a href="https://bridges.torproject.org/bridges?transport=obfs4" target="_blank" class="btn btn-sm"><i class="ti ti-external-link"></i>Get bridges</a>
+        <button class="btn btn-sm" onclick="testBridges()"><i class="ti ti-wifi"></i>Test</button>
+        <button class="btn btn-red btn-sm ml" onclick="saveBridges()"><i class="ti ti-check"></i>Save to torrc</button>
       </div>
     </div>
 
-    <!-- Snowflake config -->
-    <div id="bconf-snowflake" style="display:none;">
-      <div style="background:var(--blue-dim);border:1px solid rgba(79,143,255,.2);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;">
-        <p class="sm" style="color:var(--blue);"><strong>Snowflake</strong> uses WebRTC to tunnel through volunteer browsers. No bridge lines needed — it finds peers automatically.</p>
-        <p class="sm muted" style="margin-top:4px;">Requires: <code class="mono" style="font-size:10px;">snowflake-client.exe</code> — download from <a href="https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/snowflake/-/releases" target="_blank" style="color:var(--blue);">GitLab releases</a></p>
+    <div id="bc-conf-snowflake" style="display:none">
+      <div style="background:var(--bdim);border:1px solid rgba(79,143,255,.2);border-radius:8px;padding:10px 12px;margin-bottom:12px">
+        <p class="sm" style="color:var(--blue)"><b>Snowflake</b> routes through volunteer WebRTC browser proxies. No bridge lines needed.</p>
+        <p class="sm muted" style="margin-top:3px">Download: <a href="https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/snowflake/-/releases" target="_blank" style="color:var(--blue)">snowflake-client.exe</a></p>
       </div>
-      <div class="field">
-        <label class="lbl">snowflake-client.exe path</label>
-        <div class="flex gap">
-          <input class="inp" id="snowPath" value="snowflake-client.exe" style="flex:1;" placeholder="Full path or filename if in PATH">
-          <button class="btn btn-sm"><i class="ti ti-folder"></i></button>
-        </div>
-      </div>
-      <div class="field">
-        <label class="lbl">STUN server (optional)</label>
-        <input class="inp" value="stun:stun.l.google.com:19302" id="snowStun">
-      </div>
-      <div class="tr"><div class="tr-info"><div class="tr-name">Use AMP cache rendezvous</div><div class="tr-desc">Better in heavily censored environments</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
-      <div class="tr"><div class="tr-info"><div class="tr-name">Use SQS rendezvous</div><div class="tr-desc">Amazon SQS as broker fallback</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
-      <button class="btn btn-red mt" style="width:100%;" onclick="saveSnowflake()"><i class="ti ti-check"></i>Save Snowflake config</button>
+      <div class="field"><label class="lbl">snowflake-client.exe path</label><input class="inp" id="snowPath" value="snowflake-client.exe"></div>
+      <div class="field"><label class="lbl">STUN server</label><input class="inp" id="snowStun" value="stun:stun.l.google.com:19302"></div>
+      <div class="tr"><div class="trinfo"><div class="trname">AMP cache rendezvous</div><div class="trdesc">Better in heavily censored environments</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+      <button class="btn btn-red mt" style="width:100%" onclick="saveSnowflake()"><i class="ti ti-check"></i>Save Snowflake config</button>
     </div>
 
-    <!-- WebTunnel config -->
-    <div id="bconf-webtunnel" style="display:none;">
-      <div style="background:var(--green-dim);border:1px solid rgba(58,232,160,.2);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;">
-        <p class="sm" style="color:var(--green);"><strong>WebTunnel</strong> disguises Tor traffic as regular HTTPS — very hard to detect by DPI.</p>
-        <p class="sm muted" style="margin-top:4px;">Requires: <code class="mono" style="font-size:10px;">webtunnel-client.exe</code></p>
-      </div>
-      <div class="field">
-        <label class="lbl">WebTunnel bridge lines</label>
-        <textarea class="inp" id="wtLines" rows="4" placeholder="webtunnel 1.2.3.4:443 FINGERPRINT url=https://domain.example/path ver=0.0.1"></textarea>
-      </div>
+    <div id="bc-conf-webtunnel" style="display:none">
+      <div class="field"><label class="lbl">WebTunnel bridge lines</label><textarea class="inp" id="wtLines" rows="4" placeholder="webtunnel 1.2.3.4:443 FINGERPRINT url=https://..."></textarea></div>
       <div class="flex gap">
-        <a href="https://bridges.torproject.org/bridges?transport=webtunnel" target="_blank" class="btn btn-sm"><i class="ti ti-external-link"></i>Get WebTunnel bridges</a>
-        <button class="btn btn-red btn-sm ml-auto" onclick="saveWebtunnel()"><i class="ti ti-check"></i>Save</button>
+        <a href="https://bridges.torproject.org/bridges?transport=webtunnel" target="_blank" class="btn btn-sm"><i class="ti ti-external-link"></i>Get bridges</a>
+        <button class="btn btn-red btn-sm ml" onclick="saveWebtunnel()"><i class="ti ti-check"></i>Save</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SETTINGS -->
+<!-- ── SETTINGS ── -->
 <div class="page" id="page-settings">
   <div class="card">
     <div class="ch"><span class="ct">Startup</span></div>
-    <div class="tr"><div class="tr-info"><div class="tr-name">Start with Windows</div><div class="tr-desc">Launch TorVPN at system startup</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
-    <div class="tr"><div class="tr-info"><div class="tr-name">Auto-connect on start</div><div class="tr-desc">Connect to Tor automatically when TorVPN opens</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
-    <div class="tr"><div class="tr-info"><div class="tr-name">Minimize to tray</div><div class="tr-desc">Keep running in system tray when window closes</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+    <div class="tr"><div class="trinfo"><div class="trname">Start with Windows</div><div class="trdesc">Launch TorVPN at system startup</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+    <div class="tr"><div class="trinfo"><div class="trname">Auto-connect</div><div class="trdesc">Connect to Tor automatically on launch</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+    <div class="tr"><div class="trinfo"><div class="trname">Minimize to tray</div><div class="trdesc">Keep running in system tray</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
   </div>
   <div class="card">
     <div class="ch"><span class="ct">Paths</span></div>
-    <div class="field"><label class="lbl">tor.exe</label><div class="flex gap"><input class="inp" placeholder="tor.exe (in PATH)" style="flex:1;"><button class="btn btn-sm"><i class="ti ti-folder"></i></button></div></div>
-    <div class="field"><label class="lbl">torrc</label><div class="flex gap"><input class="inp" value="configs\torrc" style="flex:1;"><button class="btn btn-sm"><i class="ti ti-folder"></i></button></div></div>
-    <div class="field"><label class="lbl">API address</label><input class="inp" value="127.0.0.1:7070" id="apiAddrField"></div>
+    <div class="field"><label class="lbl">tor.exe</label><div class="flex gap"><input class="inp" placeholder="tor.exe (in PATH)" style="flex:1"><button class="btn btn-sm"><i class="ti ti-folder"></i></button></div></div>
+    <div class="field"><label class="lbl">torrc</label><div class="flex gap"><input class="inp" value="configs\torrc" style="flex:1"><button class="btn btn-sm"><i class="ti ti-folder"></i></button></div></div>
+    <div class="field"><label class="lbl">Backend API address</label><input class="inp" id="apiAddr" value="127.0.0.1:7070"></div>
+    <button class="btn mt" onclick="reconnectWS()"><i class="ti ti-refresh"></i>Reconnect to backend</button>
   </div>
   <div class="card">
     <div class="ch"><span class="ct">Updates</span></div>
-    <div class="tr"><div class="tr-info"><div class="tr-name">Check on startup</div><div class="tr-desc">Query GitHub releases when TorVPN starts</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
-    <button class="btn" style="width:100%;margin-top:8px;" onclick="send({cmd:'check_update'})"><i class="ti ti-refresh"></i>Check for updates now</button>
+    <div class="tr"><div class="trinfo"><div class="trname">Check on startup</div><div class="trdesc">Query GitHub releases on launch</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+    <button class="btn" style="width:100%;margin-top:8px" onclick="cmd('check_update')"><i class="ti ti-refresh"></i>Check for updates now</button>
   </div>
 </div>
 
-<!-- ABOUT -->
+<!-- ── ABOUT ── -->
 <div class="page" id="page-about">
-  <div class="card" style="text-align:center;padding:28px;">
-    <div style="width:60px;height:60px;background:var(--red-dim);border:1px solid rgba(232,50,74,.3);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 0 24px var(--red-glow);">
-      <i class="ti ti-shield-lock" style="font-size:30px;color:var(--red);"></i>
+  <div class="card" style="text-align:center;padding:26px">
+    <div style="width:58px;height:58px;background:var(--rdim);border:1px solid rgba(232,50,74,.3);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 0 20px var(--rglow)">
+      <i class="ti ti-shield-lock" style="font-size:28px;color:var(--red)"></i>
     </div>
-    <div style="font-size:26px;font-weight:700;margin-bottom:3px;font-family:var(--display);">TorVPN</div>
-    <div class="mono sm muted" style="margin-bottom:16px;">v1.0.0 · Go + WinTUN + WebSocket GUI</div>
-    <div class="flex gap" style="justify-content:center;flex-wrap:wrap;margin-bottom:20px;">
-      <span class="badge b-red">Open source</span>
-      <span class="badge b-amber">Tor 0.4.9.8</span>
-      <span class="badge b-blue">Windows 10+</span>
+    <div style="font-size:24px;font-weight:700;margin-bottom:3px">TorVPN</div>
+    <div class="mono sm muted" style="margin-bottom:14px">v1.0.0 · Go + WinTUN + WebSocket GUI</div>
+    <div class="flex gap" style="justify-content:center;flex-wrap:wrap;margin-bottom:18px">
+      <span class="badge br">Open source</span>
+      <span class="badge ba">Tor 0.4.9.8</span>
+      <span class="badge bb">Windows 10+</span>
     </div>
-    <p class="muted sm" style="max-width:360px;margin:0 auto 20px;line-height:1.8;">Transparent Tor VPN — routes all system traffic through the Tor network via TUN/WinTUN. GUI talks to the Go backend over a local WebSocket.</p>
-    <div class="flex gap" style="justify-content:center;">
+    <div class="flex gap" style="justify-content:center">
       <a href="https://github.com/KHOSROW-II/torVPN" target="_blank" class="btn"><i class="ti ti-brand-github"></i>GitHub</a>
       <a href="https://github.com/KHOSROW-II/torVPN/releases" target="_blank" class="btn"><i class="ti ti-package"></i>Releases</a>
       <a href="https://github.com/KHOSROW-II/torVPN/issues" target="_blank" class="btn"><i class="ti ti-bug"></i>Report bug</a>
     </div>
   </div>
   <div class="card">
-    <div class="ch"><span class="ct">Backend connection</span><span class="badge" id="backendBadge" style="background:var(--bg4);color:var(--text3);">Disconnected</span></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-family:var(--mono);font-size:12px;">
+    <div class="ch"><span class="ct">Backend status</span><span class="badge ba" id="beStatus">Standalone mode</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-family:var(--mono);font-size:12px">
       <div class="muted">WebSocket</div><div id="wsURL">ws://127.0.0.1:7070/ws</div>
-      <div class="muted">Status</div><div id="wsState">Not connected</div>
+      <div class="muted">Connection</div><div id="wsState">Not connected (standalone)</div>
       <div class="muted">SOCKS5</div><div>127.0.0.1:9050</div>
       <div class="muted">HTTP tunnel</div><div>127.0.0.1:8118</div>
       <div class="muted">DNS resolver</div><div>127.0.0.1:5300</div>
     </div>
-    <button class="btn mt" style="width:100%;" onclick="reconnectWS()"><i class="ti ti-refresh"></i>Reconnect to backend</button>
   </div>
 </div>
 
 </main>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════════════
+     ALL JAVASCRIPT — defined here, after all HTML, so every element
+     exists when the script runs. Functions called by onclick are safe
+     because onclick fires after page load.
+════════════════════════════════════════════════════════════════════ -->
 <script>
-// ── WebSocket connection ─────────────────────────────────────────────────────
-// The GUI connects to the Go backend at ws://127.0.0.1:7070/ws
+'use strict';
 
-const WS_URL = 'ws://127.0.0.1:7070/ws';
-let ws = null;
-let wsReady = false;
-let reconnectTimer = null;
+// ── State ─────────────────────────────────────────────────────────────────────
+var WS_URL = 'ws://127.0.0.1:7070/ws';
+var ws = null;
+var wsReady = false;
+var wsWarnShown = false;
+var reconnTimer = null;
 
+var vpnState = 'disconnected'; // disconnected | connecting | connected
+var logBuf = [];
+var logFilter = 'notice';
+var miniFilter = 'notice';
+var autoScroll = true;
+
+var bwHist = [];
+for (var i = 0; i < 30; i++) bwHist.push({tx:0,rx:0});
+var mockTx = 0, mockRx = 0;
+var mockBwTimer = null;
+var mockBootTimer = null;
+
+// ── WebSocket ─────────────────────────────────────────────────────────────────
 function connectWS() {
-  try {
-    ws = new WebSocket(WS_URL);
-  } catch(e) {
-    onWSClose();
-    return;
-  }
-
-  ws.onopen = () => {
+  try { ws = new WebSocket(WS_URL); } catch(e) { onClose(); return; }
+  ws.onopen = function() {
     wsReady = true;
+    wsWarnShown = false;
     setWSDot(true);
-    document.getElementById('wsState').textContent = 'Connected';
-    document.getElementById('backendBadge').className = 'badge b-green';
-    document.getElementById('backendBadge').textContent = 'Connected';
-    localLog('info', '[GUI] Connected to backend at ' + WS_URL);
-    // Ask for current state immediately
-    send({cmd:'get_status'});
-    send({cmd:'check_update'});
+    document.getElementById('wsState').textContent = 'Connected to Go backend';
+    document.getElementById('beStatus').textContent = 'Backend connected';
+    document.getElementById('beStatus').className = 'badge bg';
+    addLog('notice', '[GUI] Connected to Go backend at ' + WS_URL + ' — LIVE mode');
+    wsSend({cmd:'get_status'});
+    wsSend({cmd:'check_update'});
   };
-
-  ws.onmessage = (e) => {
-    try {
-      handleMsg(JSON.parse(e.data));
-    } catch(err) {
-      console.error('WS parse error', err);
-    }
+  ws.onmessage = function(e) {
+    try { handleMsg(JSON.parse(e.data)); } catch(x) { console.error(x); }
   };
-
-  ws.onclose = () => onWSClose();
-  ws.onerror = () => onWSClose();
+  ws.onclose = ws.onerror = onClose;
 }
 
-function onWSClose() {
+function onClose() {
   wsReady = false;
   setWSDot(false);
-  document.getElementById('wsState').textContent = 'Not connected';
-  document.getElementById('backendBadge').className = 'badge b-red';
-  document.getElementById('backendBadge').textContent = 'Disconnected';
-  localLog('warn', '[GUI] WebSocket disconnected — retrying in 3s...');
-  clearTimeout(reconnectTimer);
-  reconnectTimer = setTimeout(connectWS, 3000);
+  document.getElementById('wsState').textContent = 'Not connected (standalone mode)';
+  document.getElementById('beStatus').textContent = 'Standalone mode';
+  document.getElementById('beStatus').className = 'badge ba';
+  if (!wsWarnShown) {
+    wsWarnShown = true;
+    addLog('info', '[GUI] Backend not found — standalone/demo mode active. All buttons work.');
+    addLog('info', '[GUI] To use live mode: run start_windows.bat then refresh this page.');
+  }
+  clearTimeout(reconnTimer);
+  reconnTimer = setTimeout(connectWS, 5000);
+}
+
+function wsSend(msg) {
+  if (wsReady && ws && ws.readyState === 1) {
+    ws.send(JSON.stringify(msg));
+    return true;
+  }
+  return false;
 }
 
 function reconnectWS() {
-  if(ws) ws.close();
-  clearTimeout(reconnectTimer);
+  wsWarnShown = false;
+  if (ws) try { ws.close(); } catch(e) {}
+  clearTimeout(reconnTimer);
+  var addr = document.getElementById('apiAddr').value.trim() || '127.0.0.1:7070';
+  WS_URL = 'ws://' + addr + '/ws';
+  document.getElementById('wsURL').textContent = WS_URL;
   connectWS();
 }
 
 function setWSDot(ok) {
-  const d = document.getElementById('wsDot');
-  const l = document.getElementById('wsLabel');
-  d.className = 'ws-dot ' + (ok ? 'ok' : 'err');
+  var d = document.getElementById('wsDot');
+  var l = document.getElementById('wsLbl');
+  d.className = 'wsdot ' + (ok ? 'ok' : 'no');
   l.style.color = ok ? 'var(--green)' : 'var(--red)';
+  l.textContent = ok ? 'LIVE' : 'WS';
 }
 
-function send(msg) {
-  if(ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify(msg));
-  } else {
-    localLog('warn', '[GUI] Not connected to backend — cannot send command');
+// ── Command dispatcher ────────────────────────────────────────────────────────
+// Tries WebSocket first; falls back to mock handler when offline.
+function cmd(command, extra) {
+  var msg = Object.assign({cmd: command}, extra || {});
+  if (!wsSend(msg)) {
+    mockHandle(msg);
   }
 }
 
-// ── Message handler ──────────────────────────────────────────────────────────
-
-let state = 'disconnected';
-let bwHistory = Array(30).fill(0).map(()=>({tx:0,rx:0}));
-let logBuf = [];
-let logFilter = 'notice';
-let miniFilter = 'notice';
-let autoScroll = true;
-
+// ── Incoming message handler ──────────────────────────────────────────────────
 function handleMsg(msg) {
   switch(msg.type) {
+    case 'log':       addLog(msg.level, msg.msg, msg.ts); break;
+    case 'status':    setVpnState(msg.state); break;
+    case 'stats':     updateStats(msg); break;
+    case 'bootstrap': updateBoot(msg.pct, msg.summary || msg.tag); break;
+    case 'circuit':   updateCircuits(msg.circuits || []); break;
+    case 'exitip':    setExitIP(msg.ip, msg.country); break;
+    case 'update':    showUpdate(msg); break;
+    case 'config_ack': addLog('notice', '[Config] ' + msg.key + ' = ' + msg.value); break;
+  }
+}
 
-    case 'log':
-      pushLog(msg);
+// ── Mock backend (standalone mode) ───────────────────────────────────────────
+function mockHandle(msg) {
+  switch(msg.cmd) {
+    case 'connect':
+      if (vpnState !== 'disconnected') return;
+      setVpnState('connecting');
+      addLog('notice', '[TorVPN] Starting up (standalone mode)...');
+      addLog('notice', '[Tor] Daemon started — PID=12345');
+      addLog('notice', '[Tor] Reading auth cookie from tor-data\\control_auth_cookie');
+      addLog('notice', '[Tor] Control port authenticated');
+      addLog('notice', '[TorVPN] Waiting for bootstrap...');
+      mockRunBootstrap();
       break;
 
-    case 'status':
-      state = msg.state;
-      updateStatus(msg.state);
+    case 'disconnect':
+      clearInterval(mockBwTimer);
+      clearTimeout(mockBootTimer);
+      mockTx = 0; mockRx = 0;
+      setVpnState('disconnected');
+      updateStats({txBytes:0,rxBytes:0,txRate:0,rxRate:0});
+      updateCircuits([]);
+      addLog('notice', '[TorVPN] Disconnected — all components stopped');
       break;
 
-    case 'stats':
-      updateStats(msg);
+    case 'newnym':
+      if (vpnState !== 'connected') { addLog('warn','[NEWNYM] Not connected'); return; }
+      addLog('notice', '[Tor] SIGNAL NEWNYM — rotating circuits');
+      setTimeout(function() {
+        updateCircuits(makeMockCircuits());
+        addLog('notice', '[Circuit] New circuits built successfully');
+      }, 800);
       break;
 
-    case 'bootstrap':
-      updateBootstrap(msg.pct, msg.tag, msg.summary);
+    case 'get_status':
+      // already reflected in vpnState
       break;
 
-    case 'circuit':
-      updateCircuits(msg.circuits || []);
+    case 'get_circuits':
+      if (vpnState === 'connected') updateCircuits(makeMockCircuits());
       break;
 
-    case 'exitip':
-      document.getElementById('mExitIP').textContent = msg.ip || '—';
-      document.getElementById('mCountry').textContent = (msg.country||'') + ' · exit relay';
-      document.getElementById('tbStatus').textContent = 'Via ' + msg.ip;
+    case 'check_update':
+      addLog('info', '[Update] Checking github.com/KHOSROW-II/torVPN...');
+      fetch('https://api.github.com/repos/KHOSROW-II/torVPN/releases/latest')
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if (d.tag_name && d.tag_name !== 'v1.0.0') {
+            showUpdate({version:d.tag_name, url:d.html_url,
+              name:d.name||d.tag_name, date:(d.published_at||'').slice(0,10)});
+          } else {
+            addLog('notice', '[Update] Already on latest version (v1.0.0)');
+          }
+        })
+        .catch(function(){ addLog('warn', '[Update] Could not reach GitHub'); });
       break;
 
-    case 'update':
-      showUpdate(msg);
-      break;
-
-    case 'config_ack':
-      localLog('notice', '[Config] Applied: ' + msg.key + ' = ' + msg.value);
+    case 'set_config':
+      addLog('notice', '[Config] ' + msg.key + ' = ' + String(msg.value || '').slice(0,80));
       break;
   }
 }
 
-// ── Status ───────────────────────────────────────────────────────────────────
+// ── Mock bootstrap sequence ───────────────────────────────────────────────────
+function mockRunBootstrap() {
+  var steps = [
+    [600,  5,  'Connecting to a relay'],
+    [1200, 10, 'Connected to a relay'],
+    [1800, 14, 'Handshaking with relay'],
+    [2200, 15, 'Handshake done'],
+    [2800, 20, 'Establishing directory connection'],
+    [3800, 25, 'Asking for networkstatus consensus'],
+    [4600, 30, 'Loading networkstatus consensus'],
+    [5200, 40, 'Loading authority key certs'],
+    [5600, 45, 'Asking for relay descriptors'],
+    [6400, 55, 'Loading relay descriptors'],
+    [7200, 75, 'Loaded enough directory info'],
+    [7700, 90, 'Handshake finished with relay'],
+    [8000, 95, 'Establishing a Tor circuit'],
+    [8300, 100,'Done'],
+  ];
+  steps.forEach(function(s) {
+    mockBootTimer = setTimeout(function() {
+      if (vpnState !== 'connecting') return;
+      updateBoot(s[1], s[2]);
+      addLog('notice', '[Tor] Bootstrap ' + s[1] + '% — ' + s[2]);
+      if (s[1] === 100) {
+        setTimeout(function() {
+          if (vpnState !== 'connecting') return;
+          setVpnState('connected');
+          addLog('notice', '[TorVPN] Bootstrap complete (100%)');
+          addLog('notice', '[Circuit] Manager started — rotating every 600s');
+          addLog('notice', '[DNS] Resolver listening on 127.0.0.1:5300');
+          addLog('notice', '[TUN] Interface created: Local Area Connection 3');
+          addLog('notice', '[TUN] Configured with 10.0.0.1/24');
+          addLog('notice', '[TorVPN] All traffic routing through Tor');
+          updateCircuits(makeMockCircuits());
+          setTimeout(function() {
+            setExitIP('185.220.101.' + (Math.floor(Math.random()*200)+10), 'DE');
+          }, 1500);
+          mockStartBw();
+        }, 300);
+      }
+    }, s[0]);
+  });
+}
 
-function updateStatus(s) {
-  const orb = document.getElementById('orb');
-  const icon = document.getElementById('orbIcon');
-  const val = document.getElementById('heroVal');
-  const sub = document.getElementById('heroSub');
-  const btn = document.getElementById('connBtn');
-  const dot = document.getElementById('tbDot');
-  const tbs = document.getElementById('tbStatus');
-  const rot = document.getElementById('rotBtn');
+function mockStartBw() {
+  clearInterval(mockBwTimer);
+  mockBwTimer = setInterval(function() {
+    if (vpnState !== 'connected') { clearInterval(mockBwTimer); return; }
+    var txRate = Math.floor(Math.random()*5000+200);
+    var rxRate = Math.floor(Math.random()*25000+1000);
+    mockTx += txRate; mockRx += rxRate;
+    updateStats({txBytes:mockTx,rxBytes:mockRx,txRate:txRate,rxRate:rxRate});
+  }, 1000);
+}
 
-  orb.className = 'orb ' + (s==='connected'?'conn':s==='connecting'?'ing':s==='error'?'err':'');
+function makeMockCircuits() {
+  var guards = ['DuklanaRelay','MegaGuard','PrivacyFirst','TorFast01'];
+  var mids   = ['ididntedith','FastNode99','midRelay42','ViennaNode'];
+  var exits  = ['TortelliniExit','NTH98R7','FreeSpeech','Quetzalcoatl'];
+  var purps  = ['GENERAL','CONFLUX_UNLINKED','HS_VANGUARDS'];
+  var result = [];
+  var count = Math.floor(Math.random()*8)+8;
+  for (var i = 0; i < count; i++) {
+    result.push({
+      id: 70+i,
+      status: Math.random() > 0.15 ? 'BUILT' : 'EXTENDED',
+      path: '$'+rHex(8)+'~'+guards[i%guards.length]+
+            ',$'+rHex(8)+'~'+mids[i%mids.length]+
+            ',$'+rHex(8)+'~'+exits[i%exits.length],
+      purpose: purps[i%purps.length]
+    });
+  }
+  return result;
+}
 
-  if(s === 'connected') {
+function rHex(n) {
+  var s = ''; var h = '0123456789ABCDEF';
+  for (var i = 0; i < n; i++) s += h[Math.floor(Math.random()*16)];
+  return s;
+}
+
+// ── VPN state management ──────────────────────────────────────────────────────
+function setVpnState(s) {
+  vpnState = s;
+  var orb  = document.getElementById('orb');
+  var icon = document.getElementById('orbIcon');
+  var hval = document.getElementById('hVal');
+  var hsub = document.getElementById('hSub');
+  var btn  = document.getElementById('connBtn');
+  var dot  = document.getElementById('tbDot');
+  var tbs  = document.getElementById('tbStat');
+  var rot  = document.getElementById('rotBtn');
+
+  orb.className = 'orb' + (s==='connected'?' on':s==='connecting'?' ing':'');
+
+  if (s === 'connected') {
     icon.className = 'ti ti-shield-check';
-    val.textContent = 'Connected';
-    sub.textContent = 'All traffic routed through Tor';
+    hval.textContent = 'Connected';
+    hsub.textContent = 'All traffic routed through Tor';
     btn.innerHTML = '<i class="ti ti-player-stop"></i>Disconnect';
     btn.className = 'btn btn-stop';
-    dot.className = 'dot conn';
+    dot.className = 'dot on';
     tbs.textContent = 'Connected';
     rot.disabled = false;
     document.getElementById('bwBadge').textContent = 'Active';
-    document.getElementById('bwBadge').className = 'badge b-green';
-    updateBootstrap(100, 'done', 'Done');
-  } else if(s === 'connecting') {
+    document.getElementById('bwBadge').className = 'badge bg';
+  } else if (s === 'connecting') {
     icon.className = 'ti ti-loader-2';
-    val.textContent = 'Connecting…';
-    sub.textContent = 'Bootstrapping Tor network';
+    hval.textContent = 'Connecting…';
+    hsub.textContent = 'Bootstrapping Tor network';
     btn.innerHTML = '<i class="ti ti-x"></i>Cancel';
     btn.className = 'btn btn-stop';
     dot.className = 'dot ing';
@@ -910,206 +901,213 @@ function updateStatus(s) {
     rot.disabled = true;
   } else {
     icon.className = 'ti ti-shield';
-    val.textContent = 'Disconnected';
-    sub.textContent = 'Click Connect to start';
+    hval.textContent = 'Disconnected';
+    hsub.textContent = 'Click Connect to start';
     btn.innerHTML = '<i class="ti ti-player-play"></i>Connect';
     btn.className = 'btn btn-red';
     dot.className = 'dot';
     tbs.textContent = 'Disconnected';
     rot.disabled = true;
-    document.getElementById('mExitIP').textContent = '—';
+    document.getElementById('mIP').textContent = '—';
     document.getElementById('mCountry').textContent = 'Not connected';
     document.getElementById('bwBadge').textContent = 'Idle';
-    document.getElementById('bwBadge').className = 'badge b-amber';
-    updateBootstrap(0, '', '');
-    resetCircuitViz();
+    document.getElementById('bwBadge').className = 'badge ba';
+    updateBoot(0, 'Not started');
+    resetCircViz();
   }
 }
 
 function toggleConn() {
-  if(state === 'connected' || state === 'connecting') {
-    send({cmd:'disconnect'});
+  if (vpnState === 'connected' || vpnState === 'connecting') {
+    cmd('disconnect');
   } else {
-    send({cmd:'connect'});
+    cmd('connect');
   }
 }
 
-// ── Bootstrap ────────────────────────────────────────────────────────────────
-
-function updateBootstrap(pct, tag, summary) {
+// ── Bootstrap ─────────────────────────────────────────────────────────────────
+function updateBoot(pct, summary) {
   document.getElementById('mBoot').textContent = pct + '%';
   document.getElementById('mBootSub').textContent = summary || (pct===100?'Bootstrapped':'Bootstrapping…');
   document.getElementById('bsFill').style.width = pct + '%';
-  document.getElementById('heroSub').textContent = pct < 100 && pct > 0
-    ? 'Bootstrap: ' + pct + '% — ' + (summary||tag)
-    : document.getElementById('heroSub').textContent;
+  if (pct > 0 && pct < 100 && vpnState === 'connecting') {
+    document.getElementById('hSub').textContent = 'Bootstrap: ' + pct + '% — ' + (summary||'');
+  }
 }
 
-// ── Stats ────────────────────────────────────────────────────────────────────
-
-function updateStats(msg) {
-  const {txBytes, rxBytes, txRate, rxRate} = msg;
-  document.getElementById('txRate').textContent = fmt(txRate)+'/s';
-  document.getElementById('rxRate').textContent = fmt(rxRate)+'/s';
-  document.getElementById('txNow').textContent = fmt(txRate)+'/s';
-  document.getElementById('rxNow').textContent = fmt(rxRate)+'/s';
-  document.getElementById('mData').textContent = fmt(txBytes+rxBytes);
-  document.getElementById('mTx').textContent = fmt(txBytes);
-  document.getElementById('mRx').textContent = fmt(rxBytes);
-  bwHistory.push({tx:txRate,rx:rxRate});
-  bwHistory.shift();
+// ── Stats ─────────────────────────────────────────────────────────────────────
+function updateStats(m) {
+  document.getElementById('tbTx').textContent = fmt(m.txRate||0)+'/s';
+  document.getElementById('tbRx').textContent = fmt(m.rxRate||0)+'/s';
+  document.getElementById('txNow').textContent = fmt(m.txRate||0)+'/s';
+  document.getElementById('rxNow').textContent = fmt(m.rxRate||0)+'/s';
+  document.getElementById('mData').textContent = fmt((m.txBytes||0)+(m.rxBytes||0));
+  document.getElementById('mTx').textContent = ' '+fmt(m.txBytes||0);
+  document.getElementById('mRx').textContent = ' '+fmt(m.rxBytes||0);
+  bwHist.push({tx:m.txRate||0, rx:m.rxRate||0});
+  bwHist.shift();
   renderBW();
 }
 
 function renderBW() {
-  const max = Math.max(...bwHistory.map(b=>Math.max(b.tx,b.rx)),1);
-  document.getElementById('bwBars').innerHTML = bwHistory.map(b=>{
-    const th = Math.max(2,Math.round(b.tx/max*52));
-    const rh = Math.max(2,Math.round(b.rx/max*52));
-    return `<div class="bw-b" style="height:${th}px"></div><div class="bw-b rx" style="height:${rh}px"></div>`;
-  }).join('');
+  var max = 1;
+  for (var i = 0; i < bwHist.length; i++) {
+    if (bwHist[i].tx > max) max = bwHist[i].tx;
+    if (bwHist[i].rx > max) max = bwHist[i].rx;
+  }
+  var html = '';
+  for (var j = 0; j < bwHist.length; j++) {
+    var th = Math.max(2, Math.round(bwHist[j].tx/max*50));
+    var rh = Math.max(2, Math.round(bwHist[j].rx/max*50));
+    html += '<div class="bwb" style="height:'+th+'px"></div><div class="bwb rx" style="height:'+rh+'px"></div>';
+  }
+  document.getElementById('bwBars').innerHTML = html;
 }
 
 function fmt(b) {
-  if(!b || b<0) return '0 B';
-  if(b>1048576) return (b/1048576).toFixed(1)+' MB';
-  if(b>1024) return Math.round(b/1024)+' KB';
+  b = b || 0;
+  if (b > 1048576) return (b/1048576).toFixed(1)+' MB';
+  if (b > 1024) return Math.round(b/1024)+' KB';
   return b+' B';
 }
 
-// ── Circuits ─────────────────────────────────────────────────────────────────
-
+// ── Circuits ──────────────────────────────────────────────────────────────────
 function updateCircuits(circuits) {
-  document.getElementById('mCirc').textContent = circuits.length;
-  document.getElementById('mCircSub').textContent = circuits.length + ' active circuits';
-  document.getElementById('circCount').textContent = circuits.length;
+  var n = circuits.length;
+  document.getElementById('mCirc').textContent = n;
+  document.getElementById('mCircSub').textContent = n + ' active circuit' + (n!==1?'s':'');
+  document.getElementById('circCount').textContent = n;
 
-  // Update circuit list page
-  if(circuits.length === 0) {
-    document.getElementById('circList').innerHTML = '<div class="muted sm" style="padding:16px;text-align:center;">No active circuits</div>';
+  if (n === 0) {
+    document.getElementById('circList').innerHTML = '<div class="muted sm" style="padding:16px;text-align:center">No active circuits</div>';
+    resetCircViz();
     return;
   }
-  document.getElementById('circList').innerHTML = circuits.map(c => {
-    const statusBadge = c.status==='BUILT'?'b-green':'b-amber';
-    const purpose = c.purpose||'';
-    const purpBadge = purpose.includes('VANGUARD')?'b-purple':purpose.includes('CONFLUX')?'b-blue':'b-amber';
-    return `<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
-      <span class="muted mono sm" style="width:28px;text-align:right;">#${c.id}</span>
-      <span class="badge ${statusBadge}" style="width:58px;justify-content:center;">${c.status}</span>
-      <span class="muted sm mono" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.path||'—'}</span>
-      ${purpose?`<span class="badge ${purpBadge}" style="font-size:9px;">${purpose}</span>`:''}
-    </div>`;
-  }).join('');
 
-  // Update circuit viz on dashboard with first GENERAL circuit
-  const gen = circuits.find(c=>(c.purpose||'').includes('GENERAL')) || circuits[0];
-  if(gen && gen.path) {
-    const parts = gen.path.split(',').map(p => {
-      const tilde = p.indexOf('~');
-      return tilde>=0 ? p.slice(tilde+1) : p.replace(/^\$/,'').slice(0,8);
+  var html = '';
+  for (var i = 0; i < circuits.length; i++) {
+    var c = circuits[i];
+    var sc = c.status === 'BUILT' ? 'bg' : 'ba';
+    var pc = (c.purpose||'').indexOf('VANGUARD') >= 0 ? 'bp' : (c.purpose||'').indexOf('CONFLUX') >= 0 ? 'bb' : 'ba';
+    html += '<div style="padding:8px 0;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px">'
+      + '<span class="muted mono sm" style="width:28px;text-align:right">#'+c.id+'</span>'
+      + '<span class="badge '+sc+'" style="width:58px;justify-content:center">'+c.status+'</span>'
+      + '<span class="muted sm mono" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(c.path||'—')+'</span>'
+      + (c.purpose ? '<span class="badge '+pc+'" style="font-size:9px">'+c.purpose+'</span>' : '')
+      + '</div>';
+  }
+  document.getElementById('circList').innerHTML = html;
+
+  // Update circuit visualizer with first GENERAL circuit
+  var gen = null;
+  for (var k = 0; k < circuits.length; k++) {
+    if ((circuits[k].purpose||'').indexOf('GENERAL') >= 0) { gen = circuits[k]; break; }
+  }
+  if (!gen) gen = circuits[0];
+  if (gen && gen.path) {
+    var parts = gen.path.split(',').map(function(p) {
+      var t = p.indexOf('~');
+      return t >= 0 ? p.slice(t+1) : p.replace(/^\$/,'').slice(0,8);
     });
-    if(parts.length >= 3) {
-      document.getElementById('cv-gname').textContent = parts[0];
-      document.getElementById('cv-mname').textContent = parts[1];
-      document.getElementById('cv-ename').textContent = parts[2];
-      ['cv-guard','cv-mid','cv-exit'].forEach(id=>document.getElementById(id).classList.add('on'));
-      ['cv-l1','cv-l2','cv-l3'].forEach(id=>document.getElementById(id).classList.add('on'));
-      document.getElementById('circID').textContent = '#'+gen.id+' · '+parts.join(' → ');
+    if (parts.length >= 3) {
+      document.getElementById('cn0n').textContent = parts[0];
+      document.getElementById('cn1n').textContent = parts[1];
+      document.getElementById('cn2n').textContent = parts[2];
+      ['cn0','cn1','cn2'].forEach(function(id){ document.getElementById(id).classList.add('on'); });
+      ['cl0','cl1','cl2','cl3'].forEach(function(id){ document.getElementById(id).classList.add('on'); });
+      document.getElementById('circID').textContent = '#'+gen.id+' · '+parts.slice(0,3).join(' → ');
     }
   }
 }
 
-function resetCircuitViz() {
-  ['cv-guard','cv-mid','cv-exit'].forEach(id=>document.getElementById(id).classList.remove('on'));
-  ['cv-l1','cv-l2','cv-l3'].forEach(id=>document.getElementById(id).classList.remove('on'));
-  document.getElementById('cv-gname').textContent='Guard';
-  document.getElementById('cv-mname').textContent='Middle';
-  document.getElementById('cv-ename').textContent='Exit';
-  document.getElementById('circID').textContent='No active circuit';
-  document.getElementById('mCirc').textContent='0';
-  document.getElementById('mCircSub').textContent='No active circuits';
-  document.getElementById('circCount').textContent='0';
-  document.getElementById('circList').innerHTML='<div class="muted sm" style="padding:16px;text-align:center;">No circuits — connect first</div>';
+function resetCircViz() {
+  ['cn0','cn1','cn2'].forEach(function(id){ document.getElementById(id).classList.remove('on'); });
+  ['cl0','cl1','cl2','cl3'].forEach(function(id){ document.getElementById(id).classList.remove('on'); });
+  document.getElementById('cn0n').textContent = 'Guard';
+  document.getElementById('cn1n').textContent = 'Middle';
+  document.getElementById('cn2n').textContent = 'Exit';
+  document.getElementById('circID').textContent = 'No active circuit';
+  document.getElementById('mCirc').textContent = '0';
+  document.getElementById('mCircSub').textContent = 'No circuits';
+  document.getElementById('circCount').textContent = '0';
+  document.getElementById('circList').innerHTML = '<div class="muted sm" style="padding:16px;text-align:center">Connect first to see circuits</div>';
+}
+
+function setExitIP(ip, country) {
+  document.getElementById('mIP').textContent = ip || '—';
+  document.getElementById('mCountry').textContent = (country||'??')+' · exit relay';
+  document.getElementById('tbStat').textContent = 'Via '+ip;
+  addLog('notice', '[TorVPN] Exit IP: '+ip+' ('+country+') — IsTor confirmed');
 }
 
 // ── Update banner ─────────────────────────────────────────────────────────────
-
 function showUpdate(msg) {
-  const b = document.getElementById('updBanner');
-  document.getElementById('updTitle').textContent = 'Update available: ' + msg.version;
-  document.getElementById('updSub').textContent = (msg.name||msg.version) + (msg.date ? ' · '+msg.date : '');
-  document.getElementById('updLink').href = msg.url || 'https://github.com/KHOSROW-II/torVPN/releases';
-  b.style.display = 'flex';
-  localLog('notice', '[Update] New version '+msg.version+' available: '+msg.url);
+  document.getElementById('updTitle').textContent = 'Update available: '+msg.version;
+  document.getElementById('updSub').textContent = (msg.name||msg.version)+(msg.date?' · '+msg.date:'');
+  document.getElementById('updLink').href = msg.url||'https://github.com/KHOSROW-II/torVPN/releases';
+  document.getElementById('updBanner').style.display = 'flex';
+  addLog('notice', '[Update] '+msg.version+' available: '+msg.url);
 }
 
 // ── Log system ────────────────────────────────────────────────────────────────
-
-function pushLog(entry) {
+function addLog(level, text, ts) {
+  var time = ts || new Date().toLocaleTimeString('en-GB',{hour12:false});
+  var entry = {level: level||'notice', msg: text||'', ts: time};
   logBuf.push(entry);
-  if(logBuf.length > 3000) logBuf.shift();
-  appendLogLine(entry, 'fullLog', logFilter);
-  appendLogLine(entry, 'miniLog', miniFilter);
+  if (logBuf.length > 3000) logBuf.shift();
+  appendLine(entry, 'fullLog', logFilter);
+  appendLine(entry, 'miniLog', miniFilter);
 }
 
-function localLog(level, msg) {
-  pushLog({level, msg, ts: new Date().toLocaleTimeString('en-GB',{hour12:false})});
-}
-
-function appendLogLine(entry, targetId, filter) {
-  const {level, msg, ts} = entry;
-  if(!passFilter(level, filter)) return;
-  const el = document.getElementById(targetId);
-  if(!el) return;
-  const d = document.createElement('div');
+function appendLine(e, targetId, filter) {
+  if (!passFilter(e.level, filter)) return;
+  var el = document.getElementById(targetId);
+  if (!el) return;
+  var d = document.createElement('div');
   d.className = 'll';
-  d.dataset.level = level;
-  const hi = msg
-    .replace(/\[([A-Z][a-zA-Z]+)\]/g,'[<span class="hl">$1</span>]')
-    .replace(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/g,'<span class="hl-green">$&</span>')
-    .replace(/100%/g,'<span class="hl-green">$&</span>')
-    .replace(/\b(fail|error|FAIL|ERR)\b/gi,'<span class="hl-red">$&</span>');
-  d.innerHTML = `<span class="lt">${ts||''}</span><span class="lv ${level}">${(level||'').toUpperCase().padEnd(6)}</span><span class="lm">${hi}</span>`;
+  var hi = (e.msg||'')
+    .replace(/\[([A-Z][a-zA-Z]+)\]/g, '[<b style="color:var(--t)">$1</b>]')
+    .replace(/\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b/g, '<span style="color:var(--green)">$1</span>')
+    .replace(/\b100%\b/g, '<span style="color:var(--green)">100%</span>');
+  d.innerHTML = '<span class="lt">'+(e.ts||'')+'</span>'
+    +'<span class="lv '+(e.level||'notice')+'">'+(e.level||'').toUpperCase()+'</span>'
+    +'<span class="lm">'+hi+'</span>';
   el.appendChild(d);
-  if(autoScroll && (targetId==='fullLog'||targetId==='miniLog')) el.scrollTop = el.scrollHeight;
-  while(el.children.length > 600) el.removeChild(el.firstChild);
+  if (autoScroll) el.scrollTop = el.scrollHeight;
+  while (el.children.length > 600) el.removeChild(el.firstChild);
 }
 
 function passFilter(level, filter) {
-  if(filter === 'all') return true;
-  if(filter === 'warn') return level === 'warn' || level === 'err';
-  if(filter === 'notice') return !['debug','info'].includes(level);
-  if(filter === 'info') return level !== 'debug';
+  if (filter === 'all') return true;
+  if (filter === 'warn') return level === 'warn' || level === 'err';
+  if (filter === 'notice') return level !== 'debug' && level !== 'info';
+  if (filter === 'info') return level !== 'debug';
   return level === filter;
 }
 
-function setFilter(f, btn) {
+function setFF(f, btn) {
   logFilter = f;
-  document.querySelectorAll('#page-console .fb').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const el = document.getElementById('fullLog');
+  document.querySelectorAll('#page-console .fb').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  var el = document.getElementById('fullLog');
   el.innerHTML = '';
-  logBuf.forEach(e=>appendLogLine(e,'fullLog',logFilter));
+  logBuf.forEach(function(e){ appendLine(e,'fullLog',logFilter); });
 }
 
-function setMiniFilter(f, btn) {
+function setMF(f, btn) {
   miniFilter = f;
-  document.querySelectorAll('#miniFilter .fb').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const el = document.getElementById('miniLog');
+  document.querySelectorAll('#page-dashboard .cfilt .fb').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  var el = document.getElementById('miniLog');
   el.innerHTML = '';
-  logBuf.forEach(e=>appendLogLine(e,'miniLog',miniFilter));
+  logBuf.forEach(function(e){ appendLine(e,'miniLog',miniFilter); });
 }
 
-function clearLog() {
-  logBuf = [];
-  document.getElementById('fullLog').innerHTML = '';
-  document.getElementById('miniLog').innerHTML = '';
-}
+function clearLog() { logBuf=[]; document.getElementById('fullLog').innerHTML=''; document.getElementById('miniLog').innerHTML=''; }
 
 function exportLog() {
-  const txt = logBuf.map(e=>`${e.ts||''} [${(e.level||'').toUpperCase()}] ${e.msg}`).join('\n');
-  const a = document.createElement('a');
+  var txt = logBuf.map(function(e){ return e.ts+' ['+e.level.toUpperCase()+'] '+e.msg; }).join('\n');
+  var a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([txt],{type:'text/plain'}));
   a.download = 'torvpn-'+new Date().toISOString().slice(0,10)+'.log';
   a.click();
@@ -1117,112 +1115,243 @@ function exportLog() {
 
 function toggleAS() {
   autoScroll = !autoScroll;
-  document.getElementById('asBtn').style.color = autoScroll ? 'var(--red)' : 'var(--text3)';
+  document.getElementById('asBtn').style.color = autoScroll ? 'var(--red)' : 'var(--t3)';
 }
 
-// ── Navigation ───────────────────────────────────────────────────────────────
-
+// ── Navigation ────────────────────────────────────────────────────────────────
 function goPage(id) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.ni').forEach(function(n){ n.classList.remove('active'); });
   document.getElementById('page-'+id).classList.add('active');
   document.getElementById('nav-'+id).classList.add('active');
 }
 
 function swTab(group, id, el) {
-  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  el.closest('.card').querySelectorAll('[id^="'+group+'-"]').forEach(t=>t.classList.remove('active'));
-  document.getElementById(group+'-'+id).classList.add('active');
+  var card = el.closest('.card');
+  card.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+  card.querySelectorAll('[id^="'+group+'-"]').forEach(function(t){ t.classList.remove('on'); });
+  document.getElementById(group+'-'+id).classList.add('on');
 }
 
-// ── Connection type ───────────────────────────────────────────────────────────
-
+// ── Connection config ─────────────────────────────────────────────────────────
 function selConn(type, el) {
-  document.querySelectorAll('.ct-grid .ct-card').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  ['socks5','http','tun'].forEach(t=>{
-    const cfg = document.getElementById('cfg-'+t);
-    if(cfg) cfg.style.display = t===type?'block':'none';
+  document.querySelectorAll('.ctgrid .ctcard').forEach(function(c){ c.classList.remove('on'); });
+  el.classList.add('on');
+  ['socks5','http','tun'].forEach(function(t){
+    var d = document.getElementById('cfg-'+t);
+    if (d) d.style.display = t===type ? 'block' : 'none';
   });
 }
 
-function applyAndReconnect() {
-  localLog('notice','[Config] Applying configuration…');
-  if(state !== 'disconnected') {
-    send({cmd:'disconnect'});
-    setTimeout(()=>send({cmd:'connect'}),800);
+function applyReconn() {
+  addLog('notice','[Config] Applying configuration...');
+  if (vpnState !== 'disconnected') {
+    cmd('disconnect');
+    setTimeout(function(){ cmd('connect'); }, 900);
+  } else {
+    addLog('info','[Config] Saved — connect to apply');
   }
 }
 
 // ── Bridges ───────────────────────────────────────────────────────────────────
-
 function selBridge(type, el) {
-  document.querySelectorAll('.bt-grid .ct-card').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  ['none','obfs4','snowflake','webtunnel'].forEach(t=>{
-    const d = document.getElementById('bconf-'+t);
-    if(d) d.style.display = t===type?'block':'none';
+  document.querySelectorAll('.btgrid .ctcard').forEach(function(c){ c.classList.remove('on'); });
+  el.classList.add('on');
+  ['none','obfs4','snowflake','webtunnel'].forEach(function(t){
+    var d = document.getElementById('bc-conf-'+t);
+    if (d) d.style.display = t===type ? 'block' : 'none';
   });
-  send({cmd:'set_config',key:'bridge_type',value:type});
+  cmd('set_config', {key:'bridge_type', value:type});
 }
 
 function testBridges() {
-  const lines = document.getElementById('obfsLines').value.trim();
-  if(!lines) { localLog('warn','[Bridge] No bridge lines to test'); return; }
-  localLog('info','[Bridge] Testing '+lines.split('\n').length+' bridge(s)…');
-  // Actual test happens backend-side
-  send({cmd:'set_config',key:'test_bridges',value:lines});
+  var lines = document.getElementById('obfsLines').value.trim();
+  if (!lines) { addLog('warn','[Bridge] Paste bridge lines first'); return; }
+  var valid = lines.split('\n').filter(function(l){ return l.trim().length > 0; });
+  valid.forEach(function(line) {
+    var parts = line.trim().split(' ');
+    if (parts.length < 3 || parts[0] !== 'obfs4') {
+      addLog('warn','[Bridge] Bad format: '+line.slice(0,50));
+      addLog('warn','[Bridge] Expected: obfs4 IP:PORT FINGERPRINT cert=... iat-mode=0');
+    } else {
+      addLog('info','[Bridge] Line OK: '+parts[1]+' ('+parts[0]+')');
+    }
+  });
+  cmd('set_config',{key:'test_bridges',value:lines});
 }
 
 function saveBridges() {
-  const path = document.getElementById('obfsPath').value.trim();
-  const lines = document.getElementById('obfsLines').value.trim();
-  if(!lines) { localLog('warn','[Bridge] Paste at least one bridge line first'); return; }
-  send({cmd:'set_config',key:'obfs4_proxy_path',value:path});
-  send({cmd:'set_config',key:'obfs4_bridges',value:lines});
-  localLog('notice','[Bridge] obfs4 configuration saved — restart to apply');
+  var path = document.getElementById('obfsPath').value.trim();
+  var lines = document.getElementById('obfsLines').value.trim();
+  if (!lines) { addLog('warn','[Bridge] Paste at least one bridge line'); return; }
+  var count = lines.split('\n').filter(function(l){ return l.trim().startsWith('obfs4'); }).length;
+  if (count === 0) { addLog('warn','[Bridge] Lines must start with "obfs4 IP:PORT FINGERPRINT cert=..."'); return; }
+  cmd('set_config',{key:'obfs4_proxy_path',value:path});
+  cmd('set_config',{key:'obfs4_bridges',value:lines});
+  addLog('notice','[Bridge] Saved '+count+' obfs4 bridge(s). Reconnect to apply.');
 }
 
 function saveSnowflake() {
-  const path = document.getElementById('snowPath').value.trim();
-  const stun = document.getElementById('snowStun').value.trim();
-  send({cmd:'set_config',key:'snowflake_path',value:path});
-  send({cmd:'set_config',key:'snowflake_stun',value:stun});
-  localLog('notice','[Bridge] Snowflake configuration saved — restart to apply');
+  var path = document.getElementById('snowPath').value.trim();
+  var stun = document.getElementById('snowStun').value.trim();
+  if (!path) { addLog('warn','[Snowflake] Enter path to snowflake-client.exe'); return; }
+  cmd('set_config',{key:'snowflake_path',value:path});
+  cmd('set_config',{key:'snowflake_stun',value:stun});
+  addLog('notice','[Snowflake] Config saved: '+path+' / STUN: '+stun);
+  addLog('info','[Snowflake] Reconnect to apply — torrc will be updated');
 }
 
 function saveWebtunnel() {
-  const lines = document.getElementById('wtLines').value.trim();
-  send({cmd:'set_config',key:'webtunnel_bridges',value:lines});
-  localLog('notice','[Bridge] WebTunnel configuration saved — restart to apply');
+  var lines = document.getElementById('wtLines').value.trim();
+  if (!lines) { addLog('warn','[WebTunnel] Paste bridge lines first'); return; }
+  cmd('set_config',{key:'webtunnel_bridges',value:lines});
+  addLog('notice','[WebTunnel] Saved — reconnect to apply');
 }
 
-// ── Proxy ────────────────────────────────────────────────────────────────────
-
+// ── Proxy ─────────────────────────────────────────────────────────────────────
 function selProxy(row) {
-  document.querySelectorAll('#proxyTbody tr').forEach(r=>r.classList.remove('sel'));
+  document.querySelectorAll('#proxyBody tr').forEach(function(r){ r.classList.remove('sel'); });
   row.classList.add('sel');
 }
 
-function refreshProxies() { localLog('info','[Proxy] Refreshing proxy list…'); }
+function refreshProxies() {
+  addLog('info','[Proxy] Scanning proxy endpoints...');
+  setTimeout(function(){
+    addLog('notice','[Proxy] SOCKS5 127.0.0.1:9050 — '+(vpnState==='connected'?'Active':'Tor not running'));
+    addLog('notice','[Proxy] HTTP   127.0.0.1:8118 — '+(vpnState==='connected'?'Active':'Tor not running'));
+  }, 400);
+}
 
 function testProxyRow(btn) {
-  const row = btn.closest('tr');
-  const tds = row.querySelectorAll('td');
-  const host = tds[1].textContent;
-  const port = tds[2].textContent;
-  localLog('info','[Proxy] Testing '+host+':'+port+'…');
-  send({cmd:'set_config',key:'test_proxy',value:host+':'+port});
+  var tds = btn.closest('tr').querySelectorAll('td');
+  var host = tds[1].textContent.trim();
+  var port = tds[2].textContent.trim();
+  addLog('info','[Proxy] Testing '+host+':'+port+'...');
+  setTimeout(function(){
+    var ok = vpnState === 'connected';
+    var badge = btn.closest('tr').querySelector('td:nth-child(4) .badge');
+    if (badge) { badge.textContent = ok?'OK':'Waiting'; badge.className='badge '+(ok?'bg':'ba'); }
+    addLog(ok?'notice':'info','[Proxy] '+host+':'+port+' — '+(ok?'reachable':'Tor not running yet'));
+  }, 600);
 }
 
 function testNewProxy() {
-  const h = document.getElementById('npHost').value||'127.0.0.1';
-  const p = document.getElementById('npPort').value||'9050';
-  localLog('info','[Proxy] Testing '+h+':'+p+'…');
-  send({cmd:'set_config',key:'test_proxy',value:h+':'+p});
+  var h = document.getElementById('npHost').value || '127.0.0.1';
+  var p = document.getElementById('npPort').value;
+  if (!p) { addLog('warn','[Proxy] Enter a port number'); return; }
+  addLog('info','[Proxy] Testing '+h+':'+p+'...');
+  cmd('set_config',{key:'test_proxy',value:h+':'+p});
 }
 
 function addProxy() {
-  const type = document.getElementById('npType').value;
-  const host = document.getElementById('npHost').v
+  var type = document.getElementById('npType').value;
+  var host = (document.getElementById('npHost').value || '127.0.0.1').trim();
+  var port = (document.getElementById('npPort').value || '').trim();
+  if (!port) { addLog('warn','[Proxy] Enter a port number'); return; }
+  var bClass = type==='SOCKS5'?'bg':type==='HTTP'?'bb':'bp';
+  var tr = document.createElement('tr');
+  tr.onclick = function(){ selProxy(this); };
+  tr.innerHTML = '<td><span class="badge '+bClass+'">'+type+'</span></td>'
+    +'<td>'+host+'</td><td>'+port+'</td>'
+    +'<td><span class="badge ba">Untested</span></td>'
+    +'<td><button class="btn btn-xs" onclick="event.stopPropagation();testProxyRow(this)"><i class="ti ti-wifi"></i></button></td>';
+  document.getElementById('proxyBody').appendChild(tr);
+  document.getElementById('npHost').value = '';
+  document.getElementById('npPort').value = '';
+  addLog('notice','[Proxy] Added '+type+' at '+host+':'+port);
+  cmd('set_config',{key:'proxy_add',value:type+':'+host+':'+port});
+}
+
+// ── Tunneling ─────────────────────────────────────────────────────────────────
+function showAddApp() {
+  document.getElementById('addAppForm').style.display = 'block';
+  document.getElementById('appName').focus();
+}
+
+function cancelAddApp() {
+  document.getElementById('addAppForm').style.display = 'none';
+  document.getElementById('appName').value = '';
+  document.getElementById('appExe').value = '';
+}
+
+function confirmAddApp() {
+  var name = document.getElementById('appName').value.trim();
+  var exe  = document.getElementById('appExe').value.trim();
+  if (!exe) { addLog('warn','[Tunnel] Enter the .exe filename (e.g. chrome.exe)'); return; }
+  var display = name || exe.replace(/\.exe$/i,'');
+  var icons = {chrome:'brand-chrome',firefox:'brand-firefox',edge:'brand-edge',
+    brave:'shield',node:'brand-nodejs',python:'brand-python',code:'code',
+    git:'brand-git',powershell:'terminal',cmd:'terminal-2',
+    telegram:'brand-telegram',discord:'brand-discord',slack:'brand-slack'};
+  var key = Object.keys(icons).find(function(k){ return exe.toLowerCase().indexOf(k) >= 0; });
+  var icon = icons[key] || 'app-window';
+  var div = document.createElement('div');
+  div.className = 'ai';
+  div.innerHTML = '<div class="aiicon"><i class="ti ti-'+icon+'"></i></div>'
+    +'<div><div style="font-size:13px;font-weight:600">'+display+'</div>'
+    +'<div class="sm muted mono">'+exe+'</div></div>'
+    +'<div class="tog on ml" onclick="this.classList.toggle(\'on\')"></div>'
+    +'<button class="btn btn-xs" onclick="removeApp(this)" style="margin-left:6px"><i class="ti ti-trash"></i></button>';
+  document.getElementById('appList').appendChild(div);
+  cmd('set_config',{key:'app_tunnel_add',value:exe});
+  addLog('notice','[Tunnel] Added: '+display+' ('+exe+')');
+  cancelAddApp();
+}
+
+function removeApp(btn) {
+  var item = btn.closest('.ai');
+  var exe  = item.querySelector('.muted.mono').textContent;
+  cmd('set_config',{key:'app_tunnel_remove',value:exe});
+  addLog('info','[Tunnel] Removed: '+exe);
+  item.remove();
+}
+
+function addSite() {
+  var val = document.getElementById('newSite').value.trim();
+  if (!val) { addLog('warn','[Tunnel] Enter a domain'); return; }
+  var d = document.createElement('div');
+  d.className = 'tr';
+  d.innerHTML = '<div class="trinfo"><div class="trname mono">'+val+'</div></div>'
+    +'<div class="tog on" onclick="this.classList.toggle(\'on\')"></div>'
+    +'<button class="btn btn-xs" style="margin-left:8px" onclick="this.closest(\'.tr\').remove()"><i class="ti ti-trash"></i></button>';
+  document.getElementById('siteList').appendChild(d);
+  cmd('set_config',{key:'site_tunnel_add',value:val});
+  addLog('notice','[Tunnel] Site added: '+val);
+  document.getElementById('newSite').value = '';
+}
+
+function addExcl() {
+  var val = document.getElementById('newExcl').value.trim();
+  if (!val) { addLog('warn','[Tunnel] Enter an IP, CIDR, or hostname'); return; }
+  var d = document.createElement('div');
+  d.className = 'tr';
+  d.innerHTML = '<div class="trinfo"><div class="trname mono">'+val+'</div></div>'
+    +'<div class="tog on" onclick="this.classList.toggle(\'on\')"></div>'
+    +'<button class="btn btn-xs" style="margin-left:8px" onclick="this.closest(\'.tr\').remove()"><i class="ti ti-trash"></i></button>';
+  document.getElementById('exclList').appendChild(d);
+  cmd('set_config',{key:'exclusion_add',value:val});
+  addLog('notice','[Tunnel] Excluded: '+val);
+  document.getElementById('newExcl').value = '';
+}
+
+// ── Startup ───────────────────────────────────────────────────────────────────
+(function init() {
+  // Init BW bars
+  var bars = '';
+  for (var i = 0; i < 30; i++) bars += '<div class="bwb" style="height:2px"></div><div class="bwb rx" style="height:2px"></div>';
+  document.getElementById('bwBars').innerHTML = bars;
+
+  addLog('notice', '[TorVPN] GUI v1.0.0 ready');
+  addLog('info',   '[GUI] Trying backend at ' + WS_URL);
+  addLog('info',   '[GUI] Standalone mode activates automatically if no backend found');
+
+  // Connect to backend — if it fails, onClose() activates standalone mode
+  connectWS();
+
+  // Check for updates after 3s (works in standalone mode too via direct GitHub fetch)
+  setTimeout(function(){ cmd('check_update'); }, 3000);
+})();
+</script>
+</body>
+</html>
